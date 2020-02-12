@@ -98,7 +98,8 @@ st_as_sfc.SpatialPoints = function(x, ..., precision = 0.0) {
 	cc = x@coords
 	dimnames(cc) = NULL
 	lst = lapply(seq_len(nrow(cc)), function(x) st_point(cc[x,]))
-	handle_bbox(do.call(st_sfc, c(lst, crs = x@proj4string@projargs, precision = precision)), x)
+	handle_bbox(do.call(st_sfc, append(lst, list(crs = st_crs(x@proj4string), 
+		precision = precision))), x)
 }
 
 #' @name st_as_sfc
@@ -112,7 +113,8 @@ st_as_sfc.SpatialPixels = function(x, ..., precision = 0.0) {
 #' @export
 st_as_sfc.SpatialMultiPoints = function(x, ..., precision = 0.0) {
 	lst = lapply(x@coords, st_multipoint)
-	handle_bbox(do.call(st_sfc, c(lst, crs = x@proj4string@projargs, precision = precision)), x)
+	handle_bbox(do.call(st_sfc, append(lst, list(crs = st_crs(x@proj4string),
+		precision = precision))), x)
 }
 
 #' @name st_as_sfc
@@ -123,7 +125,8 @@ st_as_sfc.SpatialLines = function(x, ..., precision = 0.0, forceMulti = FALSE) {
 			function(y) st_multilinestring(lapply(y@Lines, function(z) z@coords)))
 	else
 		lapply(x@lines, function(y) st_linestring(y@Lines[[1]]@coords))
-	handle_bbox(do.call(st_sfc, c(lst, crs = x@proj4string@projargs, precision = precision)), x)
+	handle_bbox(do.call(st_sfc, append(lst, list(crs = st_crs(x@proj4string),
+		precision = precision))), x)
 }
 
 #' @name st_as_sfc
@@ -139,7 +142,8 @@ st_as_sfc.SpatialPolygons = function(x, ..., precision = 0.0, forceMulti = FALSE
 			st_multipolygon(Polygons2MULTIPOLYGON(y@Polygons, comment(y))))
 	} else
 		lapply(x@polygons, function(y) st_polygon(Polygons2POLYGON(y@Polygons)))
-	handle_bbox(do.call(st_sfc, c(lst, crs = x@proj4string@projargs, precision = precision)), x)
+	handle_bbox(do.call(st_sfc, append(lst, list(crs = st_crs(x@proj4string),
+		precision = precision))), x)
 }
 
 moreThanOneOuterRing = function(PolygonsLst) {
