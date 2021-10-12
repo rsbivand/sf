@@ -75,6 +75,21 @@ load_gdal <- function() {
 	if (file.exists(system.file("proj/nad.lst", package = "sf")[1])) {
 		# nocov start
 		prj = system.file("proj", package = "sf")[1]
+		if (package_version(CPL_proj_version()) >= 7) {
+			sys = Sys.info["sysname"]
+			if (sys == "Darwin") {
+			    home = Sys.getenv("HOME")
+			    if (nzchar(home))
+				prj = paste0(file.path(home, 
+	                            "Library/Application Support/proj"),
+			            .Platform$path.sep, prj)
+			} else if (sys == "Windows") {
+		            locapp = Sys.getenv("LOCALAPPDATA")
+			    if (nzchar(locapp))
+				prj = paste0(file.path(locapp, "proj"),
+			            .Platform$path.sep, prj)
+			}
+		}
 		if (! CPL_set_data_dir(prj)) { # if TRUE, uses C API to set path, leaving PROJ_LIB alone
 			assign(".sf.PROJ_LIB", Sys.getenv("PROJ_LIB"), envir=.sf_cache)
 			Sys.setenv("PROJ_LIB" = prj)
