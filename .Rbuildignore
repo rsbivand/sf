@@ -21,3 +21,7 @@ NOTES
 ^\.github$
 ^tic\.R$
 vignettes.awk
+install_time_patches
+^install_time_patches/rgdal.diff$
+^src/.*[.]o$
+^src/.*[.]dll$
