@@ -1,13 +1,14 @@
 <!-- badges: start -->
-[![tic](https://github.com/r-spatial/sf/workflows/tic/badge.svg?branch=master)](https://github.com/r-spatial/sf/actions)
-[![tic-db](https://github.com/r-spatial/sf/workflows/tic-db/badge.svg?branch=master)](https://github.com/r-spatial/sf/actions)
-[![Coverage Status](https://img.shields.io/codecov/c/github/r-spatial/sf/master.svg)](https://codecov.io/github/r-spatial/sf?branch=master)
+[![tic](https://github.com/r-spatial/sf/workflows/tic/badge.svg?branch=main)](https://github.com/r-spatial/sf/actions)
+[![tic-db](https://github.com/r-spatial/sf/workflows/tic-db/badge.svg?branch=main)](https://github.com/r-spatial/sf/actions)
+[![Coverage Status](https://img.shields.io/codecov/c/github/r-spatial/sf/main.svg)](https://codecov.io/github/r-spatial/sf?branch=main)
 [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 [![CRAN](http://www.r-pkg.org/badges/version/sf)](https://cran.r-project.org/package=sf)
 [![cran checks](https://cranchecks.info/badges/worst/sf)](https://cran.r-project.org/web/checks/check_results_sf.html)
 [![Downloads](http://cranlogs.r-pkg.org/badges/sf?color=brightgreen)](http://www.r-pkg.org/pkg/sf)
 [![status](https://tinyverse.netlify.com/badge/sf)](https://CRAN.R-project.org/package=sf)
 <!-- badges: end -->
+
 # Simple Features for R
 
 <a href="https://gist.github.com/edzer/f461a3a95570c4ab7edf3125c2f19d20"><img align="right" src="https://user-images.githubusercontent.com/520851/34887433-ce1d130e-f7c6-11e7-83fc-d60ad4fae6bd.gif" /></a>
@@ -16,7 +17,7 @@ A package that provides [simple features access](https://en.wikipedia.org/wiki/S
 
 * represents simple features as records in a `data.frame` or `tibble` with a geometry list-column
 * represents natively in R all 17 simple feature types for all dimensions (XY, XYZ, XYM, XYZM)
-* interfaces to [GEOS](https://trac.osgeo.org/geos) for geometrical operations on projected coordinates, and to [s2geometry](https://s2geometry.io/) for geometrical operations on ellipsoidal coordinates
+* interfaces to [GEOS](https://libgeos.org) for geometrical operations on projected coordinates, and to [s2geometry](https://s2geometry.io/) for geometrical operations on ellipsoidal coordinates
 * interfaces to [GDAL](http://www.gdal.org/), supporting all driver options, `Date` and `POSIXct` and list-columns
 * interfaces to [PRØJ](http://proj.org/) for coordinate reference system conversion and transformation
 * uses [well-known-binary](https://en.wikipedia.org/wiki/Well-known_text#Well-known_binary) serialisations written in C++/Rcpp for fast I/O with GDAL and GEOS 
@@ -40,7 +41,7 @@ A package that provides [simple features access](https://en.wikipedia.org/wiki/S
 ## Cheatsheet
 [CC 4.0](https://creativecommons.org/licenses/by/4.0/) BY [Ryan Garnett](http://github.com/ryangarnett)  
 
-<a href="https://github.com/rstudio/cheatsheets/blob/master/sf.pdf"><img src="https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/sf.png" /></a>
+<a href="https://github.com/rstudio/cheatsheets/blob/main/sf.pdf"><img src="https://raw.githubusercontent.com/rstudio/cheatsheets/main/pngs/sf.png" /></a>
 
 ## Installing
 
@@ -52,7 +53,7 @@ This will install binary packages on Windows and MacOS, unless you configured R 
 
 Install development versions from GitHub with:
 ```r
-library(devtools)
+library(remotes)
 install_github("r-spatial/sf")
 ```
 
@@ -61,6 +62,8 @@ install_github("r-spatial/sf")
 Installing sf from source works under Windows when [Rtools](https://cran.r-project.org/bin/windows/Rtools/) is installed. This downloads the system requirements from [rwinlib](https://github.com/rwinlib/). 
 
 ### MacOS
+
+MacOS users are strongly encouraged to install the `sf` binary packages from CRAN, unless they are familiar with compilers, linking, C++ source code, and homebrew.
 
 The easiest way to install `gdal` is using Homebrew. Recent versions of Homebrew include a full-featured up-to-date [gdal formula](https://github.com/Homebrew/homebrew-core/blob/master/Formula/gdal.rb), which installs `proj` and `gdal` at the same time:
 
@@ -78,7 +81,7 @@ install.packages("sf", configure.args = "--with-proj-lib=/usr/local/lib/")
 Or the development version:
 
 ```r
-library(devtools)
+library(remotes)
 install_github("r-spatial/sf", configure.args = "--with-proj-lib=/usr/local/lib/")
 ```
 

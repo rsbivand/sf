@@ -1,4 +1,4 @@
-suppressPackageStartupMessages(library(spatstat.core))
+suppressPackageStartupMessages(library(spatstat.random))
 suppressPackageStartupMessages(library(sf))
 
 data(chicago)
@@ -58,7 +58,7 @@ sf = st_sf(a = 1:3, geom = p)
 as.ppp(p0)
 
 # as.owin.sf, as.owin.sfc_*
-nc = st_read(system.file("gpkg/nc.gpkg", package="sf"), check_ring_dir = TRUE)
+nc = st_read(system.file("gpkg/nc.gpkg", package="sf"), check_ring_dir = TRUE, quiet = TRUE)
 try(as.owin(nc)) # should be projected
 nc = st_transform(nc, 32119)
 plot(as.owin(nc), col = 'grey')
@@ -80,6 +80,11 @@ st_as_sfc(o)
 
 plot(st_as_sfc(o), col = 'blue', main = 'st_as_sfc(o)')
 plot(st_as_sf(o), col = 'blue', main = 'st_as_sf(o)')
+
+data(japanesepines)
+st_as_sf(japanesepines) # warns about multiplier
+jp = rescale(japanesepines)
+st_as_sf(jp) # No warning
 
 data(nztrees)
 qNZ <- quadratcount(nztrees, nx=4, ny=3)

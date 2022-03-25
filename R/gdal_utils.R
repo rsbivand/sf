@@ -32,6 +32,7 @@ resampling_method = function(option = "near") {
 #' @param colorfilename character; name of color file for \code{demprocessing} (mandatory if \code{processing="color-relief"})
 #' @return \code{info} returns a character vector with the raster metadata; all other utils return (invisibly) a logical indicating success (i.e., \code{TRUE}); in case of failure, an error is raised.
 #' @export
+#' @seealso \link{gdal_addo} for adding overlays to a raste file
 #' @examples
 #'
 #' if (sf_extSoftVersion()["GDAL"] > "2.1.0") {
@@ -96,7 +97,7 @@ gdal_utils = function(util = "info", source, destination, options = character(0)
 
 	ret = switch(util,
 			info = CPL_gdalinfo(source, options, oo),
-			warp = CPL_gdalwarp(source, destination, options, oo, doo),
+			warp = CPL_gdalwarp(source, destination, options, oo, doo, quiet, "-overwrite" %in% options),
 			warper = CPL_gdal_warper(source, destination, as.integer(resampling_method(options)),
 				oo, doo, quiet), # nocov
 			rasterize = {  # nocov start

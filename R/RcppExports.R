@@ -113,8 +113,12 @@ CPL_gdalinfo <- function(obj, options, oo) {
     .Call('_sf_CPL_gdalinfo', PACKAGE = 'sf', obj, options, oo)
 }
 
-CPL_gdalwarp <- function(src, dst, options, oo, doo, quiet = TRUE) {
-    .Call('_sf_CPL_gdalwarp', PACKAGE = 'sf', src, dst, options, oo, doo, quiet)
+CPL_gdaladdo <- function(obj, method, overviews, bands, oo, clean = FALSE, read_only = FALSE) {
+    .Call('_sf_CPL_gdaladdo', PACKAGE = 'sf', obj, method, overviews, bands, oo, clean, read_only)
+}
+
+CPL_gdalwarp <- function(src, dst, options, oo, doo, quiet = TRUE, overwrite = FALSE) {
+    .Call('_sf_CPL_gdalwarp', PACKAGE = 'sf', src, dst, options, oo, doo, quiet, overwrite)
 }
 
 CPL_gdalrasterize <- function(src, dst, options, oo, doo, overwrite = FALSE, quiet = TRUE) {
@@ -355,6 +359,10 @@ CPL_write_gdal <- function(x, fname, driver, options, Type, dims, from, gt, p4s,
 
 CPL_extract <- function(input, xy, interpolate = FALSE) {
     .Call('_sf_CPL_extract', PACKAGE = 'sf', input, xy, interpolate)
+}
+
+CPL_create <- function(file, nxy, value, wkt, xlim, ylim) {
+    invisible(.Call('_sf_CPL_create', PACKAGE = 'sf', file, nxy, value, wkt, xlim, ylim))
 }
 
 CPL_read_wkb <- function(wkb_list, EWKB = FALSE, spatialite = FALSE) {

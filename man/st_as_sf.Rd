@@ -73,7 +73,7 @@ there is more than one and \code{sf_column_name} is \code{NULL}, the first one i
 Convert foreign object to an sf object
 }
 \details{
-setting argument \code{wkt} annihilates the use of argument \code{coords}. If \code{x} contains a column called "geometry", \code{coords} will result in overwriting of this column by the \link{sfc} geometry list-column.  Setting \code{wkt} will replace this column with the geometry list-column, unless \code{remove_coordinates} is \code{FALSE}.
+setting argument \code{wkt} annihilates the use of argument \code{coords}. If \code{x} contains a column called "geometry", \code{coords} will result in overwriting of this column by the \link{sfc} geometry list-column.  Setting \code{wkt} will replace this column with the geometry list-column, unless \code{remove} is \code{FALSE}.
 }
 \examples{
 pt1 = st_point(c(0,1))
@@ -107,15 +107,9 @@ p1 = Polygons(list( Polygon(x[5:1,]), Polygon(x2), Polygon(x3),
    Polygon(y[5:1,]), Polygon(y1), Polygon(x1), Polygon(y3)), "ID1")
 p2 = Polygons(list( Polygon(z[5:1,]), Polygon(z2), Polygon(z3), Polygon(z1)),
   "ID2")
-if (require("rgeos")) {
-  r = createSPComment(SpatialPolygons(list(p1,p2)))
-  comment(r)
-  comment(r@polygons[[1]])
-  scan(text = comment(r@polygons[[1]]), quiet = TRUE)
-  library(sf)
-  a = st_as_sf(r)
-  summary(a)
-}
+r = SpatialPolygons(list(p1,p2))
+a = suppressWarnings(st_as_sf(r))
+summary(a)
 demo(meuse, ask = FALSE, echo = FALSE)
 summary(st_as_sf(meuse))
 summary(st_as_sf(meuse.grid))

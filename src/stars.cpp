@@ -165,7 +165,7 @@ NumericVector read_gdal_data(GDALDataset *poDataset,
 		if (has_offset)
 			offset = poBand->GetOffset(NULL);
 		units[i] = poBand->GetUnitType();
-		// if (! NumericVector::is_na(nodatavalue[0]) || has_offset || has_scale) { 
+		// if (! NumericVector::is_na(nodatavalue[0]) || has_offset || has_scale) {
 		// outcommented because of NaN handling, https://github.com/r-spatial/stars/issues/333
 		for (R_xlen_t j = i * (((R_xlen_t) nBufXSize) * nBufYSize); // start of band i
 				j < (i + 1) * (((R_xlen_t) nBufXSize) * nBufYSize); // end of band i
@@ -364,6 +364,7 @@ List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVect
 	List attributeTables(bands.size());
 	CharacterVector descriptions(bands.size());
 	NumericMatrix ranges(bands.size(), 4);
+	IntegerMatrix blocksizes(bands.size(), 2);
 	for (int i = 0; i < bands.size(); i++) {
 		if ((poBand = poDataset->GetRasterBand(bands(i))) == NULL)
 			stop("trying to read a band that is not present");
@@ -384,6 +385,11 @@ List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVect
 		ranges(i, 1) = (double) set;
 		ranges(i, 2) = poBand->GetMaximum(&set);
 		ranges(i, 3) = (double) set;
+		int nBlockXSize = 0;
+		int nBlockYSize = 0;
+		poBand->GetBlockSize(&nBlockXSize, &nBlockYSize);
+		blocksizes(i, 0) = nBlockXSize;
+		blocksizes(i, 1) = nBlockYSize;
 	}
 
 	// get metadata items:
@@ -449,6 +455,7 @@ List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVect
 		_["attribute_tables"] = attributeTables,
 		_["color_tables"] = colorTables,
 		_["ranges"] = ranges,
+		_["blocksizes"] = blocksizes,
 		_["descriptions"] = descriptions,
 		_["default_geotransform"] = default_geotransform
 	);
@@ -641,7 +648,7 @@ void CPL_write_gdal(NumericMatrix x, CharacterVector fname, CharacterVector driv
 	return;
 }
 
-double get_bilinear(GDALRasterBand *poBand, double Pixel, double Line, 
+double get_bilinear(GDALRasterBand *poBand, double Pixel, double Line,
 						int iPixel, int iLine, double RasterXSize, double RasterYSize,
 						int na_set, double na_value) {
 
@@ -700,6 +707,8 @@ NumericMatrix CPL_extract(CharacterVector input, NumericMatrix xy, bool interpol
 	}
 
 	NumericMatrix ret(xy.nrow(), poDataset->GetRasterCount());
+	int xsize = poDataset->GetRasterXSize();
+	int ysize = poDataset->GetRasterYSize();
 
 	double gt[6];
 	poDataset->GetGeoTransform(gt);
@@ -726,16 +735,13 @@ NumericMatrix CPL_extract(CharacterVector input, NumericMatrix xy, bool interpol
 			int iPixel = static_cast<int>(floor( Pixel ));
 			int iLine  = static_cast<int>(floor( Line ));
 			double pixel;
-			if (iPixel < 0 || iLine < 0 ||
-					iPixel >= poDataset->GetRasterXSize() ||
-					iLine  >= poDataset->GetRasterYSize()) // outside bbox:
+			if (iPixel < 0 || iLine < 0 || iPixel >= xsize || iLine >= ysize) // outside bbox:
 				pixel = NA_REAL;
 			else { // read pixel:
 				if (interpolate)
 					// stop("interpolate not implemented");
 					pixel = get_bilinear(poBand, Pixel, Line, iPixel, iLine,
-						poDataset->GetRasterXSize(), poDataset->GetRasterYSize(),
-						nodata_set, nodata);
+						xsize, ysize, nodata_set, nodata);
 				else if (GDALRasterIO(poBand, GF_Read, iPixel, iLine, 1, 1,
 						&pixel, 1, 1, GDT_CFloat64, 0, 0) != CE_None)
 					stop("Error reading!");
@@ -749,4 +755,42 @@ NumericMatrix CPL_extract(CharacterVector input, NumericMatrix xy, bool interpol
 	}
 	GDALClose(poDataset);
 	return ret;
+}
+
+// [[Rcpp::export]]
+void CPL_create(CharacterVector file, IntegerVector nxy, NumericVector value, CharacterVector wkt, 
+				NumericVector xlim, NumericVector ylim) {
+//
+// modified from gdal/apps/gdal_create.cpp:
+//
+	int nPixels = nxy[0], nLines = nxy[1];
+	GDALDatasetH hDS = GDALCreate(GDALGetDriverByName("GTiff"),
+                                   file[0], nPixels, nLines,
+                                   1, GDT_Byte, NULL);
+	OGRSpatialReference oSRS;
+#if GDAL_VERSION_NUM >= 2050000
+	oSRS.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+#endif
+	if (oSRS.SetFromUserInput( wkt[0] ) != OGRERR_NONE) {
+		CPLError(CE_Failure, CPLE_AppDefined, "Failed to process SRS definition");
+		stop("CPL_create failed");
+	}
+	char* pszSRS = nullptr;
+	oSRS.exportToWkt( &pszSRS );
+	if( GDALSetProjection(hDS, pszSRS) != CE_None ) {
+		CPLFree(pszSRS);
+		GDALClose(hDS);
+		stop("CPL_create failed");
+	}
+	double adfGeoTransform[6];
+	adfGeoTransform[0] = xlim[0];
+	adfGeoTransform[1] = (xlim[1] - xlim[0]) / nPixels;
+	adfGeoTransform[2] = 0;
+	adfGeoTransform[3] = ylim[1];
+	adfGeoTransform[4] = 0;
+	adfGeoTransform[5] = (ylim[0] - ylim[1]) / nLines;
+	GDALSetGeoTransform(hDS, adfGeoTransform);
+	GDALFillRaster(GDALGetRasterBand(hDS, 1), value[0], 0);
+	CPLFree(pszSRS);
+	GDALClose(hDS);
 }

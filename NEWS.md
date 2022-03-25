@@ -1,3 +1,51 @@
+# version 1.0-8
+
+* `pivot_wider()` method added, by Henning Teickner; #1915
+
+* add `gdal_addo()` to add or remove overviews from raster images; #1921
+
+* `st_layers()` returns `crs` of each layer in a `crs` list of `crs` objects
+
+* restore `st_graticule()` behaviour to that of before using s2; https://github.com/tidyverse/ggplot2/issues/4571
+
+* `gdal_metadata()` sets metadata item names properly
+
+* `st_read()` gains an argument `optional` passed on to `as.data.frame` to avoid changing column names; #1916
+
+* GPX files are autodetected by `st_read()`; #1917
+
+# version 1.0-7
+
+* `st_drop_geometry()` is a generic; #1914
+
+* `st_crs(x)$ud_unit` returns the unit of the coordinate reference system of `x`
+
+* geometric predicates return `sgbp` objects omitting self-intersections etc. by passing `remove_self = TRUE` and unique symmetric relationship by passing `retain_unique = TRUE` (to `...` if needed); this simplifies identifying (and removing) duplicated geometries; duplicates are identified by e.g. by `st_equals(x, retain_unique = TRUE) |> unlist() |> unique()`; #1893
+
+* fix compile issue against GDAL < 2.5.0 introduced in 1.0-6; #1899
+
+# version 1.0-6
+
+* adapt to new `spatstat.random` package; #1892
+
+* `st_geometry<-()` also allows to rename a geometry column in an `sf` object; #1890
+
+* for `sf` objects, the `st_as_sfc()` method is an alias for `st_geometry()`; #1882
+
+* `st_make_grid()` speeded up; #1579 thanks to Krzysztof Dyba
+
+* remove direct and indirect dependencies on `rgeos` and `rgdal`; #1869
+
+* use `stats::dist` rather than GEOS for symmetric point-point Euclidian distance computation; #1874
+
+# version 1.0-5
+
+* package startup message reports status of `sf_use_s2()`; #1782
+
+* `sf_use_s2()` uses `message()` to report a change; #1782
+
+* `st_sample()` using regular sampling for ellipsoidal coordinates "works" as if coordinates were Cartesian; #1837
+
 # version 1.0-4
 
 * new function `st_delete()` deletes a data source, or layer(s) within a data source; #1828

@@ -63,12 +63,48 @@ Rcpp::CharacterVector CPL_gdalinfo(Rcpp::CharacterVector obj, Rcpp::CharacterVec
 	return ret;
 }
 
+// [[Rcpp::export]]
+Rcpp::LogicalVector CPL_gdaladdo(Rcpp::CharacterVector obj, Rcpp::CharacterVector method, 
+		Rcpp::IntegerVector overviews, Rcpp::IntegerVector bands, Rcpp::CharacterVector oo,
+		bool clean = false, bool read_only = false) {
+
+	/*
+	std::vector <char *> options_char = create_options(options, true);
+	GDALInfoOptions* opt = GDALInfoOptionsNew(options_char.data(), NULL);
+	*/
+	std::vector <char *> oo_char = create_options(oo, true); // open options
+
+	GDALDatasetH ds;
+	if ((ds = GDALOpenEx((const char *) obj[0], 
+						GDAL_OF_RASTER | (read_only ? GA_ReadOnly : GA_Update),
+						NULL, oo_char.data(), NULL)) == NULL)
+		Rcpp::stop(read_only ? "cannot open file for reading" : "cannot open file for writing");
+
+	if (clean) { // remove overviews:
+		if (GDALBuildOverviews(ds, method[0], 0, nullptr,
+                               0, nullptr, GDALRProgress, nullptr) != CE_None) {
+			GDALClose(ds);
+			Rcpp::stop("error while cleaning overviews");
+		}
+	} else { // build overviews:
+		if (GDALBuildOverviews(ds, method[0], 
+					overviews.size(), overviews.size() ? &(overviews[0]) : NULL,
+					bands.size(), bands.size() ? &(bands[0]) : NULL, 
+					GDALRProgress, NULL) != CE_None) {
+			GDALClose(ds);
+			Rcpp::stop("error while building overviews");
+		}
+	}
+	GDALClose(ds);
+	return true;
+}
+
 // #nocov start
 
 // [[Rcpp::export]]
 Rcpp::LogicalVector CPL_gdalwarp(Rcpp::CharacterVector src, Rcpp::CharacterVector dst,
 		Rcpp::CharacterVector options, Rcpp::CharacterVector oo, Rcpp::CharacterVector doo,
-		bool quiet = true) {
+		bool quiet = true, bool overwrite = false) {
 
 	int err = 0;
 
@@ -90,6 +126,10 @@ Rcpp::LogicalVector CPL_gdalwarp(Rcpp::CharacterVector src, Rcpp::CharacterVecto
 #if GDAL_VERSION_NUM >= 2030000
 		GDALWarpAppOptionsSetQuiet(opt, 0);
 #endif
+	}
+	if (overwrite && dst_ds != NULL) {
+		GDALClose(dst_ds);
+		dst_ds = NULL;
 	}
 	GDALDatasetH result = GDALWarp(dst_ds == NULL ? (const char *) dst[0] : NULL, dst_ds, 
 		src.size(), src_pt.data(), opt, &err);

@@ -64,7 +64,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
 	libtiff5-dev
 
 # GEOS:
-ENV GEOS_VERSION 3.10.0beta2
+ENV GEOS_VERSION 3.10.0
 
 RUN wget http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 \
   && bzip2 -d geos-*bz2 \
@@ -79,9 +79,11 @@ RUN wget http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 \
   && ldconfig
 
 #RUN git clone --depth 1 https://github.com/OSGeo/PROJ.git
-RUN wget http://download.osgeo.org/proj/proj-8.2.0.tar.gz
-RUN tar zxvf proj-8.2.0.tar.gz
-RUN cd proj-8.2.0 \
+# https://download.osgeo.org/proj/proj-9.0.0RC1.tar.gz
+ENV PROJ_VERSION 9.0.0RC1
+RUN wget http://download.osgeo.org/proj/proj-${PROJ_VERSION}.tar.gz
+RUN tar zxvf proj-${PROJ_VERSION}.tar.gz
+RUN cd proj* \
   && ls -l \
   && mkdir build \
   && cd build \
@@ -101,8 +103,8 @@ RUN cd proj-8.2.0 \
 # GDAL:
 
 # https://download.osgeo.org/gdal/3.1.0/gdal-3.1.0rc2.tar.gz
-ENV GDAL_VERSION 3.4.0
-ENV GDAL_VERSION_NAME 3.4.0rc2
+ENV GDAL_VERSION 3.4.1
+ENV GDAL_VERSION_NAME 3.4.1
 
 RUN wget http://download.osgeo.org/gdal/${GDAL_VERSION}/gdal-${GDAL_VERSION_NAME}.tar.gz \
   && tar -xf gdal-${GDAL_VERSION_NAME}.tar.gz \
@@ -136,10 +138,12 @@ RUN git clone --depth 10 https://github.com/r-spatial/stars.git
 RUN R CMD build --no-build-vignettes --no-manual lwgeom
 RUN R CMD build --no-build-vignettes --no-manual sf
 # RUN pkg-config proj --modversion
+RUN Rscript -e 'install.packages(c("classInt"))'
 RUN R CMD INSTALL sf
 RUN R CMD INSTALL lwgeom
 RUN R CMD INSTALL stars
 
+RUN Rscript -e 'install.packages(c("mapview", "tmap"))'
 
 RUN R CMD build --no-build-vignettes --no-manual sf
 RUN R CMD check --no-build-vignettes --no-manual --as-cran sf_*.tar.gz 
@@ -147,4 +151,5 @@ RUN R CMD check --no-build-vignettes --no-manual --as-cran lwgeom_*.tar.gz
 
 #RUN Rscript -e 'install.packages("starsdata", repos="http://gis-bigdata.uni-muenster.de/pebesma/")'
 RUN R CMD build --no-manual stars
+RUN Rscript -e 'install.packages(c("ncdfgeom"))'
 RUN _R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-build-vignettes --no-manual --as-cran stars_*.tar.gz 

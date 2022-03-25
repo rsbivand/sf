@@ -16,7 +16,7 @@ st_as_sf = function(x, ...) UseMethod("st_as_sf")
 #' @param sf_column_name character; name of the active list-column with simple feature geometries; in case
 #' there is more than one and \code{sf_column_name} is \code{NULL}, the first one is taken.
 #' @param ... passed on to \link{st_sf}, might included named arguments \code{crs} or \code{precision}
-#' @details setting argument \code{wkt} annihilates the use of argument \code{coords}. If \code{x} contains a column called "geometry", \code{coords} will result in overwriting of this column by the \link{sfc} geometry list-column.  Setting \code{wkt} will replace this column with the geometry list-column, unless \code{remove_coordinates} is \code{FALSE}.
+#' @details setting argument \code{wkt} annihilates the use of argument \code{coords}. If \code{x} contains a column called "geometry", \code{coords} will result in overwriting of this column by the \link{sfc} geometry list-column.  Setting \code{wkt} will replace this column with the geometry list-column, unless \code{remove} is \code{FALSE}.
 #'
 #' @examples
 #' pt1 = st_point(c(0,1))
@@ -73,9 +73,9 @@ st_as_sf.sf = function(x, ...) x
 st_as_sf.sfc = function(x, ...) st_sf(x, ...)
 
 
-#' Get, set, or replace geometry from an sf object
+#' Get, set, replace or rename geometry from an sf object
 #'
-#' Get, set, or replace geometry from an sf object
+#' Get, set, replace or rename geometry from an sf object
 #' @param obj object of class \code{sf} or \code{sfc}
 #' @param ... ignored
 #' @return st_geometry returns an object of class \link{sfc}, a list-column with geometries
@@ -100,8 +100,8 @@ st_geometry.sfc = function(obj, ...) obj
 st_geometry.sfg = function(obj, ...) st_sfc(obj)
 
 #' @name st_geometry
-#' @param x object of class \code{data.frame}
-#' @param value object of class \code{sfc}, or \code{character}
+#' @param x object of class \code{data.frame} or \code{sf}
+#' @param value object of class \code{sfc}, or \code{character} to set, replace, or rename the geometry of \code{x}
 #' @export
 #' @return \code{st_geometry} returns an object of class \link{sfc}. Assigning geometry to a \code{data.frame} creates an \link{sf} object, assigning it to an \link{sf} object replaces the geometry list-column.
 #' @details when applied to a \code{data.frame} and when \code{value} is an object of class \code{sfc}, \code{st_set_geometry} and \code{st_geometry<-} will first check for the existence of an attribute \code{sf_column} and overwrite that, or else look for list-columns of class \code{sfc} and overwrite the first of that, or else write the geometry list-column to a column named \code{geometry}.  In case \code{value} is character and \code{x} is of class \code{sf}, the "active" geometry column is set to \code{x[[value]]}.
@@ -147,16 +147,16 @@ st_geometry.sfg = function(obj, ...) st_sfc(obj)
 #' @export
 `st_geometry<-.sf` = function(x, value) {
 	if (! is.null(value)) {
-		stopifnot(inherits(value, "sfc") || is.character(value))
+		stopifnot(is.character(value) || inherits(value, "sfc"))
 		if (inherits(value, "sfc"))
 			stopifnot(nrow(x) == length(value))
-		if (is.character(value))
-			stopifnot(inherits(x[[value]], "sfc"))
 	}
 
-	if (!is.null(value) && is.character(value)) # set flag to another column:
+	if (!is.null(value) && is.character(value)) { # set flag to another column:
+		if (!(value %in% names(x)))
+			names(x)[names(x) == attr(x, "sf_column")] = value
 		attr(x, "sf_column") <- value
-	else # replace, remove, or set list-column
+	} else # replace, remove, or set list-column
 		x[[attr(x, "sf_column")]] <- value
 
 	if (is.null(value))
@@ -175,8 +175,11 @@ st_set_geometry = function(x, value) {
 	x
 }
 
+#' @export
+st_as_sfc.sf = function(x, ...) st_geometry(x)
+
 list_column_to_sfc = function(x) {
-	if (is.list(x)) {
+	if (is.list(x) && !inherits(x, "data.frame")) {
 		if (inherits(try(y <- st_as_sfc(x), silent = TRUE), "try-error"))
 			x
 		else
@@ -448,9 +451,11 @@ as.data.frame.sf = function(x, ...) {
 #' @export
 #' @name st_geometry
 #' @details \code{st_drop_geometry} drops the geometry of its argument, and reclasses it accordingly
-st_drop_geometry = function(x) {
-	if (!inherits(x, "sf"))
-		stop("st_drop_geometry only works with objects of class sf")
+st_drop_geometry = function(x, ...) UseMethod("st_drop_geometry")
+
+#' @export
+#' @name st_geometry
+st_drop_geometry.sf = function(x, ...) {
 	st_set_geometry(x, NULL)
 }
 

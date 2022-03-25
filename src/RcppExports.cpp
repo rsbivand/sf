@@ -346,9 +346,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CPL_gdaladdo
+Rcpp::LogicalVector CPL_gdaladdo(Rcpp::CharacterVector obj, Rcpp::CharacterVector method, Rcpp::IntegerVector overviews, Rcpp::IntegerVector bands, Rcpp::CharacterVector oo, bool clean, bool read_only);
+RcppExport SEXP _sf_CPL_gdaladdo(SEXP objSEXP, SEXP methodSEXP, SEXP overviewsSEXP, SEXP bandsSEXP, SEXP ooSEXP, SEXP cleanSEXP, SEXP read_onlySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type overviews(overviewsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type bands(bandsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type oo(ooSEXP);
+    Rcpp::traits::input_parameter< bool >::type clean(cleanSEXP);
+    Rcpp::traits::input_parameter< bool >::type read_only(read_onlySEXP);
+    rcpp_result_gen = Rcpp::wrap(CPL_gdaladdo(obj, method, overviews, bands, oo, clean, read_only));
+    return rcpp_result_gen;
+END_RCPP
+}
 // CPL_gdalwarp
-Rcpp::LogicalVector CPL_gdalwarp(Rcpp::CharacterVector src, Rcpp::CharacterVector dst, Rcpp::CharacterVector options, Rcpp::CharacterVector oo, Rcpp::CharacterVector doo, bool quiet);
-RcppExport SEXP _sf_CPL_gdalwarp(SEXP srcSEXP, SEXP dstSEXP, SEXP optionsSEXP, SEXP ooSEXP, SEXP dooSEXP, SEXP quietSEXP) {
+Rcpp::LogicalVector CPL_gdalwarp(Rcpp::CharacterVector src, Rcpp::CharacterVector dst, Rcpp::CharacterVector options, Rcpp::CharacterVector oo, Rcpp::CharacterVector doo, bool quiet, bool overwrite);
+RcppExport SEXP _sf_CPL_gdalwarp(SEXP srcSEXP, SEXP dstSEXP, SEXP optionsSEXP, SEXP ooSEXP, SEXP dooSEXP, SEXP quietSEXP, SEXP overwriteSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -358,7 +375,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type oo(ooSEXP);
     Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type doo(dooSEXP);
     Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
-    rcpp_result_gen = Rcpp::wrap(CPL_gdalwarp(src, dst, options, oo, doo, quiet));
+    Rcpp::traits::input_parameter< bool >::type overwrite(overwriteSEXP);
+    rcpp_result_gen = Rcpp::wrap(CPL_gdalwarp(src, dst, options, oo, doo, quiet, overwrite));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1179,6 +1197,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CPL_create
+void CPL_create(CharacterVector file, IntegerVector nxy, NumericVector value, CharacterVector wkt, NumericVector xlim, NumericVector ylim);
+RcppExport SEXP _sf_CPL_create(SEXP fileSEXP, SEXP nxySEXP, SEXP valueSEXP, SEXP wktSEXP, SEXP xlimSEXP, SEXP ylimSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type file(fileSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type nxy(nxySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type wkt(wktSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xlim(xlimSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type ylim(ylimSEXP);
+    CPL_create(file, nxy, value, wkt, xlim, ylim);
+    return R_NilValue;
+END_RCPP
+}
 // CPL_read_wkb
 Rcpp::List CPL_read_wkb(Rcpp::List wkb_list, bool EWKB, bool spatialite);
 static SEXP _sf_CPL_read_wkb_try(SEXP wkb_listSEXP, SEXP EWKBSEXP, SEXP spatialiteSEXP) {
@@ -1322,7 +1355,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_sf_CPL_get_layers", (DL_FUNC) &_sf_CPL_get_layers, 3},
     {"_sf_CPL_read_ogr", (DL_FUNC) &_sf_CPL_read_ogr, 14},
     {"_sf_CPL_gdalinfo", (DL_FUNC) &_sf_CPL_gdalinfo, 3},
-    {"_sf_CPL_gdalwarp", (DL_FUNC) &_sf_CPL_gdalwarp, 6},
+    {"_sf_CPL_gdaladdo", (DL_FUNC) &_sf_CPL_gdaladdo, 7},
+    {"_sf_CPL_gdalwarp", (DL_FUNC) &_sf_CPL_gdalwarp, 7},
     {"_sf_CPL_gdalrasterize", (DL_FUNC) &_sf_CPL_gdalrasterize, 7},
     {"_sf_CPL_gdaltranslate", (DL_FUNC) &_sf_CPL_gdaltranslate, 5},
     {"_sf_CPL_gdalvectortranslate", (DL_FUNC) &_sf_CPL_gdalvectortranslate, 6},
@@ -1383,6 +1417,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_sf_CPL_read_gdal", (DL_FUNC) &_sf_CPL_read_gdal, 6},
     {"_sf_CPL_write_gdal", (DL_FUNC) &_sf_CPL_write_gdal, 12},
     {"_sf_CPL_extract", (DL_FUNC) &_sf_CPL_extract, 3},
+    {"_sf_CPL_create", (DL_FUNC) &_sf_CPL_create, 6},
     {"_sf_CPL_read_wkb", (DL_FUNC) &_sf_CPL_read_wkb, 3},
     {"_sf_CPL_write_wkb", (DL_FUNC) &_sf_CPL_write_wkb, 2},
     {"_sf_CPL_get_z_range", (DL_FUNC) &_sf_CPL_get_z_range, 2},
