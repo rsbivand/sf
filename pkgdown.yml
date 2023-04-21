@@ -1,0 +1,16 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  sf1: sf1.html
+  sf2: sf2.html
+  sf3: sf3.html
+  sf4: sf4.html
+  sf5: sf5.html
+  sf6: sf6.html
+  sf7: sf7.html
+last_built: 2023-04-21T20:45Z
+urls:
+  reference: https://r-spatial.github.io/sf/reference
+  article: https://r-spatial.github.io/sf/articles
+
