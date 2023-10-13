@@ -16,7 +16,7 @@ Well-Know Binary geometries to sfc"><meta property="og:image" content="https://r
     
     <a class="navbar-brand me-2" href="../index.html">sf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-15</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,7 +91,8 @@ Well-Know Binary geometries to sfc</p>
 <span>  fid_column_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  drivers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  wkt_filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  optional <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  optional <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  use_stream <span class="op">=</span> <span class="fu">default_st_read_use_stream</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">read_sf</span><span class="op">(</span><span class="va">...</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, as_tibble <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -171,7 +172,7 @@ all to the Multi variety; defaults to <code>TRUE</code></p></dd>
 
 <dt>stringsAsFactors</dt>
 <dd><p>logical; logical: should character vectors be
-  converted to factors?  Default for <code>read_sf</code> or R version &gt;= 4.1.0 is 
+  converted to factors?  Default for <code>read_sf</code> or R version &gt;= 4.1.0 is
 <code>FALSE</code>, for <code>st_read</code> and R version &lt; 4.1.0 equal to
 <code><a href="https://rdrr.io/r/base/base-defunct.html" class="external-link">default.stringsAsFactors()</a></code></p></dd>
 
@@ -204,6 +205,10 @@ clockwise, holes clockwise)</p></dd>
 <dd><p>logical; passed to <a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a>; always <code>TRUE</code> when <code>as_tibble</code> is <code>TRUE</code></p></dd>
 
 
+<dt>use_stream</dt>
+<dd><p>Use TRUE to use the experimental columnar interface introduced in GDAL 3.6.</p></dd>
+
+
 <dt>as_tibble</dt>
 <dd><p>logical; should the returned table be of class tibble or data.frame?</p></dd>
 
@@ -217,7 +222,7 @@ clockwise, holes clockwise)</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>object of class <a href="sf.html">sf</a> when a layer was successfully read; in case
+<p>object of class <a href="sf-package.html">sf</a> when a layer was successfully read; in case
   argument <code>layer</code> is missing and data source <code>dsn</code> does not
   contain a single layer, an object of class <code>sf_layers</code> is returned
   with the layer names, each with their geometry type(s). Note that the
@@ -237,7 +242,12 @@ basis; <code>type</code> may be specified for each geometry column.</p>
 <p>Note that stray files in data source directories (such as <code>*.dbf</code>) may
 lead to spurious errors that accompanying <code>*.shp</code> are missing.</p>
 <p>In case of problems reading shapefiles from USB drives on OSX, please see
-<a href="https://github.com/r-spatial/sf/issues/252" class="external-link">https://github.com/r-spatial/sf/issues/252</a>.</p>
+<a href="https://github.com/r-spatial/sf/issues/252" class="external-link">https://github.com/r-spatial/sf/issues/252</a>. Reading shapefiles (or other
+data sources) directly from zip files can be done by prepending the path 
+with <code>/vsizip/</code>. This is part of the GDAL Virtual File Systems interface
+that also supports .gz, curl, and other operations, including chaining; see
+<a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">https://gdal.org/user/virtual_file_systems.html</a> for a complete
+description and examples.</p>
 <p>For <code>query</code> with a character <code>dsn</code> the query text is handed to
 'ExecuteSQL' on the GDAL/OGR data set and will result in the creation of a
 new layer (and <code>layer</code> is ignored). See 'OGRSQL'

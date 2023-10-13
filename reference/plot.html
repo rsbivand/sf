@@ -12,7 +12,7 @@ Plot sf object"><meta property="og:image" content="https://r-spatial.github.io/s
     
     <a class="navbar-brand me-2" href="../index.html">sf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-15</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,15 +75,16 @@ Plot sf object</p>
 <span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nbreaks <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  breaks <span class="op">=</span> <span class="st">"pretty"</span>,</span>
-<span>  max.plot <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"sf_max.plot"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="fl">9</span> <span class="kw">else</span> <span class="va">n</span>,</span>
+<span>  max.plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"sf_max.plot"</span>, default <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
 <span>  key.pos <span class="op">=</span> <span class="fu">get_key_pos</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>,</span>
 <span>  key.length <span class="op">=</span> <span class="fl">0.618</span>,</span>
-<span>  key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">1.8</span><span class="op">)</span>,</span>
+<span>  key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">1.8</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"ps"</span><span class="op">)</span><span class="op">/</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>  reset <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  logz <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  extent <span class="op">=</span> <span class="va">x</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="fu"><a href="st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">extent</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>  ylim <span class="op">=</span> <span class="fu"><a href="st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">extent</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span></span>
+<span>  ylim <span class="op">=</span> <span class="fu"><a href="st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">extent</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  compact <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_key_pos</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -248,7 +249,7 @@ Plot sf object</p>
 
 
 <dt>key.pos</dt>
-<dd><p>integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to <code>NULL</code> to omit key completely, 0 to only not plot the key, or -1 to select automatically. If multiple columns are plotted in a single function call by default no key is plotted and every submap is stretched individually; if a key is requested (and <code>col</code> is missing) all maps are colored according to a single key. Auto select depends on plot size, map aspect, and, if set, parameter <code>asp</code>.</p></dd>
+<dd><p>numeric; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to <code>NULL</code> to omit key completely, 0 to only not plot the key, or -1 to select automatically. If multiple columns are plotted in a single function call by default no key is plotted and every submap is stretched individually; if a key is requested (and <code>col</code> is missing) all maps are colored according to a single key. Auto select depends on plot size, map aspect, and, if set, parameter <code>asp</code>. If it has lenght 2, the second value, ranging from 0 to 1, determines where the key is placed in the available space (default: 0.5, center).</p></dd>
 
 
 <dt>key.length</dt>
@@ -277,6 +278,10 @@ Plot sf object</p>
 
 <dt>ylim</dt>
 <dd><p>see <a href="https://rdrr.io/r/graphics/plot.window.html" class="external-link">plot.window</a></p></dd>
+
+
+<dt>compact</dt>
+<dd><p>logical; compact sub-plots over plotting space?</p></dd>
 
 
 <dt>pch</dt>
@@ -437,7 +442,7 @@ If categorical is <code>TRUE</code>, default colors are from <a href="https://co
 <span class="r-plt img"><img src="plot-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># manipulate plotting order, plot largest polygons first:</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="st.html">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="sf.html">st_sf</a></span><span class="op">(</span>a<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fu"><a href="sfc.html">st_sfc</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">p</span> <span class="op">*</span> <span class="fl">2</span>, <span class="va">p</span> <span class="op">*</span> <span class="fl">3</span>, <span class="va">p</span> <span class="op">*</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="co"># plot(x, col=2:5) only shows the largest polygon!</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="sf-object.html">st_sf</a></span><span class="op">(</span>a<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fu"><a href="sfc.html">st_sfc</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">p</span> <span class="op">*</span> <span class="fl">2</span>, <span class="va">p</span> <span class="op">*</span> <span class="fl">3</span>, <span class="va">p</span> <span class="op">*</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="co"># plot(x, col=2:5) only shows the largest polygon!</span></span></span>
 <span class="r-in"><span><span class="fu">plot</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="geos_measures.html">st_area</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,<span class="op">]</span>, col <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="co"># plot largest polygons first</span></span></span>
 <span class="r-plt img"><img src="plot-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
