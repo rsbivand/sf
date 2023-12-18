@@ -93,7 +93,16 @@ interfaced and do not use the <code>size</code> argument, see examples.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for sfg</span></span>
-<span><span class="fu">st_sample</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">st_sample</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for bbox</span></span>
+<span><span class="fu">st_sample</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">size</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  great_circles <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  segments <span class="op">=</span> <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://r-quantities.github.io/units/reference/units.html" class="external-link">set_units</a></span><span class="op">(</span><span class="fl">2</span>, <span class="st">"degree"</span>, mode <span class="op">=</span> <span class="st">"standard"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -132,6 +141,14 @@ when <code>type = "random"</code>.</p></dd>
 <dt>progress</dt>
 <dd><p>logical; if <code>TRUE</code> show progress bar (only if <code>size</code> is a vector).</p></dd>
 
+
+<dt>great_circles</dt>
+<dd><p>logical; if <code>TRUE</code>, great circle arcs are used to connect the bounding box vertices, if <code>FALSE</code> parallels (graticules)</p></dd>
+
+
+<dt>segments</dt>
+<dd><p>units, or numeric (degrees); segment sizes for segmenting a bounding box polygon if <code>great_circles</code> is <code>FALSE</code></p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -145,13 +162,13 @@ when <code>type = "random"</code>.</p></dd>
 the object if <code>size</code> is a single number, or the specified number of points
 in each feature if <code>size</code> is a vector of integers equal in length to the geometry
 of <code>x</code>.</p>
-<p>if <code>x</code> has dimension 2 (polygons) and geographical coordinates (long/lat), uniform random sampling on the sphere is applied, see e.g. <a href="http://mathworld.wolfram.com/SpherePointPicking.html" class="external-link">http://mathworld.wolfram.com/SpherePointPicking.html</a>.</p>
+<p>if <code>x</code> has dimension 2 (polygons) and geographical coordinates (long/lat), uniform random sampling on the sphere is applied, see e.g. <a href="https://mathworld.wolfram.com/SpherePointPicking.html" class="external-link">https://mathworld.wolfram.com/SpherePointPicking.html</a>.</p>
 <p>For <code>regular</code> or <code>hexagonal</code> sampling of polygons, the resulting size is only an approximation.</p>
 <p>As parameter called <code>offset</code> can be passed to control ("fix") regular or hexagonal sampling: for polygons a length 2 numeric vector (by default: a random point from <code>st_bbox(x)</code>); for lines use a number like <code>runif(1)</code>.</p>
-<p>Fibonacci sampling see: Alvaro Gonzalez, 2010. Measurement of Areas on a Sphere Using Fibonacci and Latitude-Longitude Lattices. 
+<p>Fibonacci sampling see: Alvaro Gonzalez, 2010. Measurement of Areas on a Sphere Using Fibonacci and Latitude-Longitude Lattices.
 Mathematical Geosciences 42(1), p. 49-64</p>
 <p>For regular sampling on the sphere, see also <code>geosphere::regularCoordinates</code>.</p>
-<p>Sampling methods from package <code>spatstat</code> are interfaced (see examples), and need their own parameters to be set. 
+<p>Sampling methods from package <code>spatstat</code> are interfaced (see examples), and need their own parameters to be set.
 For instance, to use <code><a href="https://rdrr.io/pkg/spatstat.random/man/rThomas.html" class="external-link">spatstat.random::rThomas()</a></code>, set <code>type = "Thomas"</code>.</p>
     </div>
 
@@ -235,6 +252,19 @@ For instance, to use <code><a href="https://rdrr.io/pkg/spatstat.random/man/rTho
 <span class="r-in"><span>  <span class="co"># for spatstat.random::rThomas(), set type = "Thomas":</span></span></span>
 <span class="r-in"><span>  <span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu">st_sample</span><span class="op">(</span><span class="va">x</span>, kappa <span class="op">=</span> <span class="fl">1</span>, mu <span class="op">=</span> <span class="fl">10</span>, scale <span class="op">=</span> <span class="fl">0.1</span>, type <span class="op">=</span> <span class="st">"Thomas"</span><span class="op">)</span> </span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="va">bbox</span> <span class="op">=</span> <span class="fu"><a href="st_bbox.html">st_bbox</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">40</span>, ymax <span class="op">=</span> <span class="fl">70</span>, ymin <span class="op">=</span> <span class="fl">60</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  crs <span class="op">=</span> <span class="fu"><a href="st_crs.html">st_crs</a></span><span class="op">(</span><span class="st">'OGC:CRS84'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">13531</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">s1</span> <span class="op">=</span> <span class="fu">st_sample</span><span class="op">(</span><span class="va">bbox</span>, <span class="fl">400</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">s1</span><span class="op">)</span> <span class="co"># within bbox</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       xmin       ymin       xmax       ymax </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.1363265 60.0010700 39.9875925 69.9959621 </span>
+<span class="r-in"><span><span class="va">s2</span> <span class="op">=</span> <span class="fu">st_sample</span><span class="op">(</span><span class="va">bbox</span>, <span class="fl">400</span>, great_circles <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">s2</span><span class="op">)</span> <span class="co"># outside bbox</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       xmin       ymin       xmax       ymax </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.2142515 60.5825658 39.9612431 71.0157092 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
