@@ -18,7 +18,7 @@ interfaced and do not use the size argument, see examples.'><meta property="og:i
     
     <a class="navbar-brand me-2" href="../index.html">sf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-15</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-16</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,8 @@ interfaced and do not use the <code>size</code> argument, see examples.</p>
 <span>  exact <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  warn_if_not_integer <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  by_polygon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  progress <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for sfg</span></span>
@@ -142,6 +143,10 @@ when <code>type = "random"</code>.</p></dd>
 <dd><p>logical; if <code>TRUE</code> show progress bar (only if <code>size</code> is a vector).</p></dd>
 
 
+<dt>force</dt>
+<dd><p>logical; if <code>TRUE</code> continue when the sampled bounding box area is more than 1e4 times the area of interest, else (default) stop with an error. If this error is not justified, try setting <code>oriented=TRUE</code>, see details.</p></dd>
+
+
 <dt>great_circles</dt>
 <dd><p>logical; if <code>TRUE</code>, great circle arcs are used to connect the bounding box vertices, if <code>FALSE</code> parallels (graticules)</p></dd>
 
@@ -170,6 +175,7 @@ Mathematical Geosciences 42(1), p. 49-64</p>
 <p>For regular sampling on the sphere, see also <code>geosphere::regularCoordinates</code>.</p>
 <p>Sampling methods from package <code>spatstat</code> are interfaced (see examples), and need their own parameters to be set.
 For instance, to use <code><a href="https://rdrr.io/pkg/spatstat.random/man/rThomas.html" class="external-link">spatstat.random::rThomas()</a></code>, set <code>type = "Thomas"</code>.</p>
+<p>For sampling polygons one can specify <code>oriented=TRUE</code> to make sure that polygons larger than half the globe are not reverted, e.g. when specifying a polygon from a bounding box of a global dataset. The <code>st_sample</code> method for <code>bbox</code> does this by default.</p>
     </div>
 
     <div class="section level2">
