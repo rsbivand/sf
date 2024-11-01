@@ -9,7 +9,7 @@ For data.frame alternatives see st_sf(). To convert a foreign object to sfc, see
 
     <a class="navbar-brand me-2" href="../index.html">sf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-19</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,8 @@ For data.frame alternatives see <code><a href="sf.html">st_sf()</a></code>. To c
 <span>  precision <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  check_ring_dir <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">dim</span>,</span>
-<span>  recompute_bbox <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  recompute_bbox <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  oriented <span class="op">=</span> <span class="cn">NA</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'sfc'</span></span>
@@ -90,6 +91,11 @@ For data.frame alternatives see <code><a href="sf.html">st_sf()</a></code>. To c
 
 <dt id="arg-recompute-bbox">recompute_bbox<a class="anchor" aria-label="anchor" href="#arg-recompute-bbox"></a></dt>
 <dd><p>logical; use <code>TRUE</code> to force recomputation of the bounding box</p></dd>
+
+
+<dt id="arg-oriented">oriented<a class="anchor" aria-label="anchor" href="#arg-oriented"></a></dt>
+<dd><p>logical; if <code>TRUE</code>, the ring is oriented such that left of the edges is inside the polygon; this is
+needed for convering polygons larger than half the globe to s2</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
@@ -154,7 +160,7 @@ superclass <code>GEOMETRY</code>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

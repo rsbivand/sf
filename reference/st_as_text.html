@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">sf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-19</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,6 +91,14 @@
 (known as EWKT, supported by PostGIS and other simple features implementations for addition of
 a SRID to a WKT string).</p>
     </div>
+    <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+    <p>To improve conversion performance, the lwgeom package can be used (it must be installed
+beforehand) and set the <code>Sys.setenv("LWGEOM_WKT" = "true")</code> environment variable. This
+will also result in faster printing of complex geometries. Note that the representation as WKT is
+different from the sf package and may cause reproducibility problems. An alternative solution is
+to use the <code><a href="https://r-spatial.github.io/lwgeom/reference/st_astext.html" class="external-link">lwgeom::st_astext()</a></code> or <code><a href="https://paleolimbot.github.io/wk/reference/wkt.html" class="external-link">wk::as_wkt()</a></code> functions.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -109,7 +117,7 @@ a SRID to a WKT string).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
