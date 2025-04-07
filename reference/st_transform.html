@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">sf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-21</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -223,7 +223,7 @@ variable as numeric, previous versions return a character vector containing a nu
 <span class="r-out co"><span class="r-pr">#&gt;</span>   a                     geom</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 2 POINT (779236.4 6800125)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 1 POINT (-3339585 2273031)</span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="sf_extSoftVersion.html">sf_extSoftVersion</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="st">"GDAL"</span><span class="op">]</span> <span class="op">&gt;=</span> <span class="st">"3.0.0"</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/compareVersion.html" class="external-link">compareVersion</a></span><span class="op">(</span><span class="fu"><a href="sf_extSoftVersion.html">sf_extSoftVersion</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="st">"GDAL"</span><span class="op">]</span>, <span class="st">"3.0.0"</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu">st_transform</span><span class="op">(</span><span class="va">sfc</span>, pipeline <span class="op">=</span></span></span>
 <span class="r-in"><span>    <span class="st">"+proj=pipeline +step +proj=axisswap +order=2,1"</span><span class="op">)</span> <span class="co"># reverse axes</span></span></span>
 <span class="r-in"><span>  <span class="fu">st_transform</span><span class="op">(</span><span class="va">sfc</span>, pipeline <span class="op">=</span></span></span>
