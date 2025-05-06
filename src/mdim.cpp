@@ -196,13 +196,13 @@ std::shared_ptr<GDALMDArray> get_array(std::shared_ptr<GDALGroup> grp, const std
 	const char *pszArrayName = aosTokens[aosTokens.size() - 1];
 	auto array(grp->OpenMDArray(pszArrayName));
 	if (!array) {
-		Rcout << "Cannot open array" << pszArrayName << std::endl;
+		Rcout << "Cannot open array " << pszArrayName << std::endl;
 		stop("array not found");
 	}
 	return array;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 List CPL_read_mdim(CharacterVector file, CharacterVector array_names, CharacterVector oo, 
 				IntegerVector offset, IntegerVector count, IntegerVector step, 
 				bool proxy = false, bool debug = false) {
@@ -431,7 +431,7 @@ void write_attributes(std::shared_ptr<GDALMDArray> md, CharacterVector attrs) {
 	}
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 List CPL_write_mdim(CharacterVector name, CharacterVector driver, IntegerVector dimensions,
 				List variables, CharacterVector wkt, CharacterVector xy, CharacterVector RootGroupOptions,
 				CharacterVector CreationOptions, bool as_float = true) {
