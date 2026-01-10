@@ -46,7 +46,7 @@ List get_band_meta_data(GDALDataset *poDataset) {
 	return ret;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 CharacterVector CPL_get_metadata(CharacterVector obj, CharacterVector domain_item,
 		CharacterVector options) {
 
@@ -58,7 +58,7 @@ CharacterVector CPL_get_metadata(CharacterVector obj, CharacterVector domain_ite
 	return ret;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 List CPL_get_crs(CharacterVector obj, CharacterVector options) {
 	List ret(4);
 	GDALDatasetH ds = GDALOpenEx(obj[0], GDAL_OF_RASTER | GDAL_OF_READONLY, NULL, NULL,
@@ -88,7 +88,7 @@ List CPL_get_crs(CharacterVector obj, CharacterVector options) {
 
 	return ret;
 }
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 NumericVector CPL_inv_geotransform(NumericVector gt_r) {
 	if (gt_r.size() != 6)
 		stop("wrong length geotransform"); // #nocov
@@ -282,7 +282,7 @@ List get_rat(GDALRasterAttributeTable *tbl) {
 	return t;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVector driver,
 		bool read_data, NumericVector NA_value, List RasterIO_parameters, double max_cells) {
 // reads and returns data set metadata, and adds data array if read_data is true, or less 
@@ -491,7 +491,7 @@ List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVect
 	return ReturnList;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 void CPL_write_gdal(NumericMatrix x, CharacterVector fname, CharacterVector driver,
 		CharacterVector options, CharacterVector Type, IntegerVector dims, IntegerVector from,
 		NumericVector gt, CharacterVector p4s, NumericVector na_val, NumericVector scale_offset,
@@ -553,23 +553,17 @@ void CPL_write_gdal(NumericMatrix x, CharacterVector fname, CharacterVector driv
 
 	// create dataset:
 	GDALDataset *poDstDS;
+	bool createCopy = false;
 	if (create) {
 		if (from[0] != 0 || from[1] != 0)
 			stop("from values should be zero when creating a dataset"); // #nocov
 
 		if (poDriver->GetMetadataItem(GDAL_DCAP_CREATE) == NULL && 
 						poDriver->GetMetadataItem(GDAL_DCAP_CREATECOPY) != NULL) {
+			createCopy = true;
 			GDALDriver *memDriver = GetGDALDriverManager()->GetDriverByName("MEM");
-			GDALDataset *memDS;
-			if ((memDS = memDriver->Create(fname[0], dims[0], dims[1], dims[2], eType, NULL)) == NULL)
+			if ((poDstDS = memDriver->Create(fname[0], dims[0], dims[1], dims[2], eType, NULL)) == NULL)
 				stop("cannot create copy in memory"); // #nocov
-			options.push_back("APPEND_SUBDATASET=YES");
-			if ((poDstDS = poDriver->CreateCopy(fname[0], memDS, FALSE, 
-										create_options(options).data(), NULL, NULL)) == NULL) {
-				GDALClose(memDS);
-				stop("cannot CreateCopy from memory dataset");
-			} else
-				GDALClose(memDS);
 		} else if ((poDstDS = poDriver->Create( fname[0], dims[0], dims[1], dims[2], eType,
 				create_options(options).data())) == NULL)
 			stop("creating dataset failed"); // #nocov
@@ -685,6 +679,15 @@ void CPL_write_gdal(NumericMatrix x, CharacterVector fname, CharacterVector driv
 				x.begin(), dims[0] - from[0], dims[1] - from[1], GDT_Float64,
 				dims[2], NULL, 0, 0, 0, NULL) == CE_Failure)
 			stop("write failure"); // #nocov
+
+		if (createCopy) { // so far in memory, still need to write to disk:
+			options.push_back("APPEND_SUBDATASET=YES");
+			GDALDataset *poCopyDS;
+			if ((poCopyDS = poDriver->CreateCopy(fname[0], poDstDS, FALSE, 
+										create_options(options).data(), NULL, NULL)) == NULL)
+				stop("cannot CreateCopy from memory dataset");
+			GDALClose(poCopyDS);
+		}
 	}
 
 	/* close: */
@@ -746,7 +749,7 @@ double get_bilinear(GDALRasterBand *poBand, double Pixel, double Line,
 				pixels[3] * dX     * dY;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 NumericMatrix CPL_extract(CharacterVector input, NumericMatrix xy, CharacterVector interpolate) {
 	// mostly taken from gdal/apps/gdallocationinfo.cpp
 
@@ -773,6 +776,7 @@ NumericMatrix CPL_extract(CharacterVector input, NumericMatrix xy, CharacterVect
 		stop("interpolation method not supported"); // #nocov
 
 	double gt[6];
+	int n_err = 0;
 	poDataset->GetGeoTransform(gt);
 	double gt_inv[6];
 	// int retval = GDALInvGeoTransform(gt, gt_inv);
@@ -803,7 +807,7 @@ NumericMatrix CPL_extract(CharacterVector input, NumericMatrix xy, CharacterVect
 #if GDAL_VERSION_NUM >= 3100000
 				if (poBand->InterpolateAtPoint(Pixel, Line, RA, &pixel, nullptr) != CE_None)
 						// tbd: handle GRIORA_Cubic, GRIORA_CubicSpline
-					stop("Error in InterpolateAtPoint()");
+					n_err += 1;
 #else
 				if (RA == GRIORA_Cubic || RA == GRIORA_CubicSpline)
 					stop("cubic or cubicspline requires GDAL >= 3.10.0");
@@ -822,11 +826,13 @@ NumericMatrix CPL_extract(CharacterVector input, NumericMatrix xy, CharacterVect
 			ret(i, j) = pixel;
 		}
 	}
+	if (n_err > 0)
+		Rcout << n_err << " error(s) in InterpolateAtPoint()" << std::endl; // #nocov
 	GDALClose(poDataset);
 	return ret;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 void CPL_create(CharacterVector file, IntegerVector nxy, NumericVector value, CharacterVector wkt,
 				NumericVector xlim, NumericVector ylim) {
 //
