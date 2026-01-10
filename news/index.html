@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">sf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-21</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-24</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@
     <li><a class="dropdown-item" href="../articles/sf6.html">6. Miscellaneous</a></li>
     <li><a class="dropdown-item" href="../articles/sf7.html">7. Spherical geometry in sf using s2geometry</a></li>
   </ul></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://r-spatial.org/book/">Book</a></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -42,10 +43,33 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0-21" id="version-10-21">version 1.0-21<a class="anchor" aria-label="anchor" href="#version-10-21"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0-24" id="version-10-24">version 1.0-24<a class="anchor" aria-label="anchor" href="#version-10-24"></a></h2>
+<ul><li><p><code><a href="../reference/gdal.html">gdal_write()</a></code> handles drivers that only have a <code>CreateCopy()</code> option; <a href="https://github.com/r-spatial/stars/issues/762" class="external-link uri">https://github.com/r-spatial/stars/issues/762</a></p></li>
+<li><p>if <code>datum</code> is missing in a call to <code><a href="../reference/st_graticule.html">st_graticule()</a></code>, a graticule by default will try to use the geographic coordinate reference system of arguments <code>x</code> or <code>crs</code>; when nothing is found there it falls back to <code>OGC:CRS84</code> (WGS84).</p></li>
+<li><p>the figure margins parameter <code>mar</code> can be specified in a call to <code><a href="../reference/plot.html">plot.sf()</a></code>; <a href="https://github.com/r-spatial/sf/issues/2558" class="external-link">#2558</a></p></li>
+<li><p>fix class label setting in <code>[.sf()</code>; <a href="https://github.com/r-spatial/sf/issues/2557" class="external-link">#2557</a></p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0-23" id="version-10-23">version 1.0-23<a class="anchor" aria-label="anchor" href="#version-10-23"></a></h2><p class="text-muted">CRAN release: 2025-11-28</p>
+<ul><li><p>allow tests reading blosc compressed Zarr files to fail</p></li>
+<li><p><code><a href="../reference/st_as_sf.html">st_as_sf.data.frame()</a></code> sets <code>z_range</code> and <code>m_range</code> if needed; <a href="https://github.com/geoarrow/geoarrow-r/issues/75" class="external-link uri">https://github.com/geoarrow/geoarrow-r/issues/75</a></p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0-22" id="version-10-22">version 1.0-22<a class="anchor" aria-label="anchor" href="#version-10-22"></a></h2><p class="text-muted">CRAN release: 2025-11-10</p>
+<ul><li><p><code><a href="../reference/geos_combine.html">st_combine()</a></code> on <code>POINT</code> geometries ignores empty points; <a href="https://github.com/r-spatial/sf/issues/2551" class="external-link">#2551</a></p></li>
+<li><p>handle empty points better in <code><a href="../reference/st.html">st_point()</a></code>, <code><a href="../reference/st_as_sf.html">st_as_sf.data.frame()</a></code> and <code><a href="../reference/geos_measures.html">st_distance()</a></code>; <a href="https://github.com/r-spatial/s2/issues/289" class="external-link uri">https://github.com/r-spatial/s2/issues/289</a></p></li>
+<li><p>for unprojected lines, <code><a href="../reference/st_line_project_point.html">st_line_interpolate()</a></code> requires distance values with degree units; <a href="https://github.com/r-spatial/sf/issues/2542" class="external-link">#2542</a></p></li>
+<li><p><code>unique.sfc()</code> added; <a href="https://github.com/r-spatial/sf/issues/2546" class="external-link">#2546</a></p></li>
+<li><p>for geodetic coordinates, <code><a href="../reference/geos_measures.html">st_perimeter()</a></code> uses ellipsoidal computation if <code><a href="../reference/s2.html">sf_use_s2()</a></code> is <code>FALSE</code>; <a href="https://github.com/r-spatial/sf/issues/2541" class="external-link">#2541</a></p></li>
+<li><p><code>st_as_sf.owin()</code> and <code>st_as_sfc.owin()</code> no longer ignore <code>crs</code> argument; <a href="https://github.com/r-spatial/sf/issues/2532" class="external-link">#2532</a></p></li>
+<li><p>clarify approximation errors in <code><a href="../reference/geos_unary.html">st_buffer()</a></code> and how they differ for the GEOS or S2 backends, with examples by David Kaplan <a href="https://github.com/dmkaplan2000" class="external-link">@dmkaplan2000</a>; <a href="https://github.com/r-spatial/sf/issues/2528" class="external-link">#2528</a></p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0-21" id="version-10-21">version 1.0-21<a class="anchor" aria-label="anchor" href="#version-10-21"></a></h2><p class="text-muted">CRAN release: 2025-05-15</p>
 <ul><li><p><code>st_crs(..., parameters = TRUE)</code> returns base geographic CRS as <code>gcs_crs</code>; <a href="https://github.com/r-spatial/sf/issues/2524" class="external-link">#2524</a></p></li>
 <li><p>loading <code>sf</code> no longer initializes the RNG state; see <a href="https://github.com/r-quantities/units/issues/409" class="external-link uri">https://github.com/r-quantities/units/issues/409</a></p></li>
 <li><p>fix <code><a href="../reference/st_sample.html">st_sample()</a></code> on geodetic coordinates; <a href="https://github.com/r-spatial/sf/issues/2515" class="external-link">#2515</a></p></li>
+<li><p>use <code><a href="https://rdrr.io/r/utils/compareVersion.html" class="external-link">compareVersion()</a></code> consistently to compare GDAL versions; <a href="https://github.com/r-spatial/sf/issues/2512" class="external-link">#2512</a></p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0-20" id="version-10-20">version 1.0-20<a class="anchor" aria-label="anchor" href="#version-10-20"></a></h2><p class="text-muted">CRAN release: 2025-03-24</p>
@@ -472,7 +496,7 @@
 <li><p><code><a href="../reference/st_sample.html">st_sample()</a></code> supports regular sampling of <code>LINESTRING</code>; <a href="https://github.com/r-spatial/sf/issues/725" class="external-link">#725</a> by <a href="https://github.com/statnmap" class="external-link">@statnmap</a></p></li>
 <li><p>Support reading and writing of database <code>Pool</code> objects; <a href="https://github.com/r-spatial/sf/issues/756" class="external-link">#756</a></p></li>
 <li><p>fix plotting of <code>sf</code> objects without attributes; <a href="https://github.com/r-spatial/sf/issues/755" class="external-link">#755</a></p></li>
-<li><p>add reference to the <a href="https://journal.r-project.org/archive/2018/RJ-2018-009/index.html" class="external-link">R Journal article</a> in CITATION</p></li>
+<li><p>add reference to the <a href="https://journal.r-project.org/articles/RJ-2018-009/index.html" class="external-link">R Journal article</a> in CITATION</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6-3" id="version-06-3">version 0.6-3<a class="anchor" aria-label="anchor" href="#version-06-3"></a></h2><p class="text-muted">CRAN release: 2018-05-17</p>
@@ -757,7 +781,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

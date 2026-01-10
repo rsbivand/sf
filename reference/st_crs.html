@@ -9,7 +9,7 @@ Set or replace retrieve coordinate reference system from object"><meta property=
 
     <a class="navbar-brand me-2" href="../index.html">sf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-21</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0-24</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@ Set or replace retrieve coordinate reference system from object"><meta property=
     <li><a class="dropdown-item" href="../articles/sf6.html">6. Miscellaneous</a></li>
     <li><a class="dropdown-item" href="../articles/sf7.html">7. Spherical geometry in sf using s2geometry</a></li>
   </ul></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://r-spatial.org/book/">Book</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -115,7 +116,7 @@ Set or replace retrieve coordinate reference system from object"><meta property=
 
 
 <dt id="arg-parameters">parameters<a class="anchor" aria-label="anchor" href="#arg-parameters"></a></dt>
-<dd><p>logical; <code>FALSE</code> by default; if <code>TRUE</code> return a list of coordinate reference system parameters, with named elements <code>SemiMajor</code>, <code>InvFlattening</code>, <code>units_gdal</code>, <code>IsVertical</code>, <code>WktPretty</code>, and <code>Wkt</code></p></dd>
+<dd><p>logical; <code>FALSE</code> by default; only for the <code>st_crs.sfc()</code> method: if <code>TRUE</code> return a classed list of coordinate reference system parameters, with named elements <code>SemiMajor</code>, <code>InvFlattening</code>, <code>units_gdal</code>, <code>IsVertical</code>, <code>WktPretty</code>, <code>Wkt</code>, <code>Name</code>, <code>proj4string</code>, <code>epsg</code>, <code>yx</code>, <code>ProjJson</code>, <code>WKT1_ESRI</code>, <code>srid</code> (in authority:code form), <code>axes</code> (a data.frame with columns <code>name</code> and <code>orientation</code>), <code>gcs_crs</code> with the WKT of the base geographic coordinate system, <code>ud_unit</code>. The list has class <code>crs_parameters</code>.</p></dd>
 
 
 <dt id="arg-value">value<a class="anchor" aria-label="anchor" href="#arg-value"></a></dt>
@@ -238,7 +239,7 @@ The return value is the current state of this (<code>FALSE</code>, by default).<
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
