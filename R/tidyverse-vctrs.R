@@ -222,6 +222,8 @@ sf_cast = function(x, to, ...) {
   # CRS and precision must match
   check_same_crs(x, to)
   check_same_precision(x, to)
+  if (inherits(to, "tbl_df"))
+    data = tibble::as_tibble(data)
 
   sf_column_name = attr(to, "sf_column")
 
