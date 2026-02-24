@@ -1,6 +1,34 @@
 # Changelog
 
+## version 1.1-0
+
+CRAN release: 2026-02-24
+
+- [`gdal_compressors()`](https://r-spatial.github.io/sf/reference/gdal_compressors.md)
+  queries GDAL compressor and decompressor capabilities
+
+- [`st_cast.sfc()`](https://r-spatial.github.io/sf/reference/st_cast.md)
+  deals with zero-length objects;
+  [\#2584](https://github.com/r-spatial/sf/issues/2584)
+
+- rewrite/migrate `vctrs` methods for `sf` and `sfc`;
+  [\#2568](https://github.com/r-spatial/sf/issues/2568),
+  [\#2584](https://github.com/r-spatial/sf/issues/2584), w. help from
+  [@DavisVaughan](https://github.com/DavisVaughan)
+
+- [`st_agr()`](https://r-spatial.github.io/sf/reference/st_agr.md) and
+  `st_agr<-()` better handle multiple geometry columns
+
+- for an `sfc` object `x`, `x[0]` retains the class of `x`;
+  [\#2568](https://github.com/r-spatial/sf/issues/2568)
+
+- When sampling a degenerate (zero length) line, a warning is raised
+  rather than a message;
+  [\#2575](https://github.com/r-spatial/sf/issues/2575)
+
 ## version 1.0-24
+
+CRAN release: 2026-01-12
 
 - [`gdal_write()`](https://r-spatial.github.io/sf/reference/gdal.md)
   handles drivers that only have a `CreateCopy()` option;

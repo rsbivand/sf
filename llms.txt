@@ -155,8 +155,8 @@ For Mac OS 11 Big Sur source install instruction, see
 
 ### Linux
 
-For Unix-alikes, GDAL (\>= 2.0.1), GEOS (\>= 3.4.0) and Proj.4 (\>=
-4.8.0) are required.
+For Unix-alikes, GDAL (\>= 2.0.1), GEOS (\>= 3.4.0) and PROJ (\>= 4.8.0)
+are required.
 
 #### Ubuntu
 
@@ -206,8 +206,8 @@ the AUR:
 
 There are several reports that `sf` fails to install as a source package
 when R is used with `renv`, or when R is installed in a `conda`
-environment. If you experience this, please do not raise an issue here,
-but
+environment. If you experience this, please only raise an issue here if
+the problem persists without `renv` or `conda`, and otherwise
 
 - try to sort this out with the `renv` developers or the `conda`
   maintainers, or
@@ -222,6 +222,15 @@ geospatial](https://github.com/rocker-org/geospatial) Dockerfiles may be
 helpful. Ubuntu Dockerfiles are found
 [here](https://github.com/r-spatial/sf/tree/main/inst/docker).
 
+### Support for (Geo)Parquet and Arrow
+
+`sf` links to GDAL, but does not control how GDAL was configured and
+built. Not every GDAL installation has built-in support for GeoParquet
+or Arrow. Please see [this
+issue](https://github.com/r-spatial/sf/issues/2585), or configure and
+compile GDAL with Parquet support e.g. using [this
+Dockerfile](https://github.com/r-spatial/sf/tree/main/inst/docker/parquet).
+
 ### Multiple GDAL, GEOS and/or PROJ versions on your system
 
 If you use dynamic linking (installation from source) and have multiple
@@ -233,7 +242,7 @@ general not work, even when setting `LD_LIBRARY_PATH` manually. See
 ### lwgeom
 
 Functions and methods that require `liblwgeom`, including ellipsoidal
-(not spherical or Euclidean) metrics (area, distances), are provide by
+(not spherical or Euclidean) metrics (area, distances), are provided by
 and used from [lwgeom](https://github.com/r-spatial/lwgeom), which is
 also on [CRAN](https://cran.r-project.org/package=lwgeom).
 
@@ -311,6 +320,9 @@ This project gratefully acknowledges financial
 
 - [`gdal_addo()`](https://r-spatial.github.io/sf/reference/gdal_addo.md)
   : Add or remove overviews to/from a raster image
+
+- [`gdal_compressors()`](https://r-spatial.github.io/sf/reference/gdal_compressors.md)
+  : List GDAL compressors and decompressors
 
 - [`gdal_utils()`](https://r-spatial.github.io/sf/reference/gdal_utils.md)
   : Native interface to gdal utils
@@ -675,10 +687,6 @@ This project gratefully acknowledges financial
 - [`st_is_valid()`](https://r-spatial.github.io/sf/reference/valid.md)
   [`st_make_valid()`](https://r-spatial.github.io/sf/reference/valid.md)
   : Check validity or make an invalid geometry valid
-
-- [`vec_ptype2.sfc()`](https://r-spatial.github.io/sf/reference/vctrs.md)
-  [`vec_cast.sfc()`](https://r-spatial.github.io/sf/reference/vctrs.md)
-  : vctrs methods for sf objects
 
 # Articles
 

@@ -3,7 +3,7 @@
 ## Introduction
 
 This vignette describes what spherical geometry implies, and how package
-`sf` uses the s2geometry library (<http://s2geometry.io>) for
+`sf` uses the s2geometry library (<https://s2geometry.io>) for
 geometrical measures, predicates and transformations.  
 After `sf` has been loaded, it will report whether `s2` is being used;
 it can be switched off (resorting to flat space geometry) by
@@ -87,7 +87,7 @@ transformations *on the sphere*. This means:
   but are also slower)
 
 The `s2` package is really a wrapper around the C++
-[s2geometry](http://s2geometry.io) library which was written by Google,
+[s2geometry](https://s2geometry.io) library which was written by Google,
 and which is used in many of its products (e.g. Google Maps, Google
 Earth Engine, BigQuery GIS) and has been translated in several other
 programming languages.
@@ -447,26 +447,26 @@ system.time({
   uk_buffer_sf = st_buffer(uk_projected, dist = 20000)
 })
 ##    user  system elapsed 
-##   0.027   0.000   0.028
+##   0.028   0.001   0.028
 # sf way with few than the 30 segments in the buffer
 system.time({
   uk_projected = st_transform(uk_sfc, 27700)
   uk_buffer_sf2 = st_buffer(uk_projected, dist = 20000, nQuadSegs = 4)
 })
 ##    user  system elapsed 
-##   0.007   0.000   0.008
+##   0.009   0.000   0.008
 # s2 with default cell size
 system.time({
   uk_buffer = s2_buffer_cells(uk, distance = 20000)
 })
 ##    user  system elapsed 
-##   0.025   0.000   0.024
+##   0.025   0.000   0.025
 # s2 with 10000 cells
 system.time({
   uk_buffer2 = s2_buffer_cells(uk, distance = 20000, max_cells = 10000)
 })
 ##    user  system elapsed 
-##   0.223   0.000   0.223
+##   0.228   0.000   0.229
 # s2 with 100 cells
 system.time({
   uk_buffer2 = s2_buffer_cells(uk, distance = 20000, max_cells = 100)

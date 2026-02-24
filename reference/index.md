@@ -43,6 +43,9 @@
 - [`gdal_addo()`](https://r-spatial.github.io/sf/reference/gdal_addo.md)
   : Add or remove overviews to/from a raster image
 
+- [`gdal_compressors()`](https://r-spatial.github.io/sf/reference/gdal_compressors.md)
+  : List GDAL compressors and decompressors
+
 - [`gdal_utils()`](https://r-spatial.github.io/sf/reference/gdal_utils.md)
   : Native interface to gdal utils
 
@@ -406,7 +409,3 @@
 - [`st_is_valid()`](https://r-spatial.github.io/sf/reference/valid.md)
   [`st_make_valid()`](https://r-spatial.github.io/sf/reference/valid.md)
   : Check validity or make an invalid geometry valid
-
-- [`vec_ptype2.sfc()`](https://r-spatial.github.io/sf/reference/vctrs.md)
-  [`vec_cast.sfc()`](https://r-spatial.github.io/sf/reference/vctrs.md)
-  : vctrs methods for sf objects
