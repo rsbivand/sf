@@ -1,3 +1,17 @@
+# version 1.1-0
+
+* `gdal_compressors()` queries GDAL compressor and decompressor capabilities
+
+* `st_cast.sfc()` deals with zero-length objects; #2584
+
+* rewrite/migrate `vctrs` methods for `sf` and `sfc`; #2568, #2584, w. help from @DavisVaughan
+
+* `st_agr()` and `st_agr<-()` better handle multiple geometry columns
+
+* for an `sfc` object `x`, `x[0]` retains the class of `x`; #2568
+
+* When sampling a degenerate (zero length) line, a warning is raised rather than a message; #2575
+
 # version 1.0-24
 
 * `gdal_write()` handles drivers that only have a `CreateCopy()` option; https://github.com/r-spatial/stars/issues/762 

@@ -485,7 +485,7 @@ fi
 
 #AC_MSG_NOTICE([PKG_LIBS: ${PKG_LIBS}])
 
-${CC} ${CFLAGS} ${CPPFLAGS} -o proj_conf_test proj_conf_test.c ${PROJ_LIBS}
+${CC} ${CFLAGS} -o proj_conf_test proj_conf_test.c ${PROJ_LIBS}
 
 proj_version=`./proj_conf_test`
 
@@ -524,7 +524,7 @@ int main(void) {
 }
 _EOCONF]
 
-${CC} ${CFLAGS} ${CPPFLAGS} -o proj_conf_test proj_conf_test.c ${PROJ_LIBS}
+${CC} ${CFLAGS} -o proj_conf_test proj_conf_test.c ${PROJ_LIBS}
 if test [ -n "$proj_share_path" ] ; then
   PROJ_LIB="${proj_share_path}" ./proj_conf_test
   proj_share=`echo $?`
@@ -572,7 +572,7 @@ int main(void) {
 }
 _EOCONF]
 
-${CC} ${CFLAGS} ${CPPFLAGS} -o proj_conf_test proj_conf_test.c ${PROJ_LIBS}
+${CC} ${CFLAGS} -o proj_conf_test proj_conf_test.c ${PROJ_LIBS}
 if test [ -n "$proj_share_path" ] ; then
   PROJ_LIB="${proj_share_path}" ./proj_conf_test
   proj_share=`echo $?`
@@ -625,7 +625,7 @@ int main(void) {
 }
 _EOCONF]
 
-${CC} ${CFLAGS} ${CPPFLAGS} -o proj_conf_test proj_conf_test.c ${PROJ_LIBS}
+${CC} ${CFLAGS} -o proj_conf_test proj_conf_test.c ${PROJ_LIBS}
 if test [ -n "$proj_share_path" ] ; then
   PROJ_LIB="${proj_share_path}" ./proj_conf_test
   proj_share=`echo $?`
