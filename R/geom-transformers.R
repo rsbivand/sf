@@ -29,7 +29,13 @@
 #' when \code{sf_use_s2()} is set to \code{FALSE}). See \href{https://postgis.net/docs/ST_Buffer.html}{postgis.net/docs/ST_Buffer.html}
 #' for details. The \code{max_cells} and \code{min_level} parameters ([s2::s2_buffer_cells()]) work with the S2
 #' engine (i.e. geographic coordinates) and can be used to change the buffer shape (e.g. smoothing). 
-#' A negative `dist` value for geodetic coordinates does not give a proper (geodetic) buffer.
+#' The S2 engine returns a polygon _around_ a number of S2 cells that
+#' contain the buffer, and hence will always have an area larger than the
+#' true buffer, depending on `max_cells`, and will be non-smooth when sufficiently zoomed in. 
+#' The GEOS engine will return line segments between points
+#' on the circle, and so will always be _smaller_ than the true
+#' buffer, and be smooth, depending on the number of segments `nQuadSegs`.
+#' A negative `dist` value for geodetic coordinates using S2 does not give a proper (geodetic) buffer.
 #' 
 #' @examples
 #'
@@ -69,6 +75,29 @@
 #'    main = "mitreLimit: 3")
 #' plot(l2, col = 'blue', add = TRUE)
 #' par(op)
+#'
+#' # compare approximation errors depending on S2 or GEOS backend:
+#' # geographic coordinates, uses S2:
+#' x = st_buffer(st_as_sf(data.frame(lon=0,lat=0), coords=c("lon","lat"),crs='OGC:CRS84'), 
+#'       units::as_units(1,"km"))
+#' y = units::set_units(st_area(x), "km^2")
+#' # error: postive, default maxcells = 1000
+#' (units::drop_units(y)-pi)/pi
+#' x = st_buffer(st_as_sf(data.frame(lon=0,lat=0), coords=c("lon","lat"),crs='OGC:CRS84'), 
+#'       units::as_units(1,"km"), max_cells=1e5)
+#' y = units::set_units(st_area(x), "km^2")
+#' # error: positive but smaller:
+#' (units::drop_units(y)-pi)/pi
+#' 
+#' # no CRS set: assumes Cartesian (projected) coordinates
+#' x = st_buffer(st_as_sf(data.frame(lon=0,lat=0), coords=c("lon","lat")), 1)
+#' y = st_area(x)
+#' # error: negative, nQuadSegs default at 30
+#' ((y)-pi)/pi
+#' x = st_buffer(st_as_sf(data.frame(lon=0,lat=0), coords=c("lon","lat")), 1, nQuadSegs = 100)
+#' y = st_area(x)
+#' # error: negative but smaller:
+#' ((y)-pi)/pi
 st_buffer = function(x, dist, nQuadSegs = 30,
 					 endCapStyle = "ROUND", joinStyle = "ROUND", mitreLimit = 1.0, singleSide = FALSE, ...)
 	UseMethod("st_buffer")
@@ -141,6 +170,8 @@ st_buffer.sfc = function(x, dist, nQuadSegs = 30,
 			singleSide = rep(as.logical(singleSide), length.out = length(x))
 			if (any(endCapStyle == 2) && any(st_geometry_type(x) == "POINT" | st_geometry_type(x) == "MULTIPOINT"))
 				stop("Flat capstyle is incompatible with POINT/MULTIPOINT geometries") # nocov
+			if (inherits(dist, "units"))
+				dist = drop_units(dist)
 			if (any(dist < 0) && any(st_dimension(x) < 1))
 				stop("Negative dist values may only be used with 1-D or 2-D geometries") # nocov
 
@@ -533,11 +564,10 @@ st_voronoi.sfc = function(x, envelope = st_polygon(), dTolerance = 0.0, bOnlyEdg
 	if (compareVersion(CPL_geos_version(), "3.5.0") > -1) {
 		if (isTRUE(st_is_longlat(x)))
 			warning("st_voronoi does not correctly triangulate longitude/latitude data")
-		if (compareVersion(CPL_geos_version(), "3.12.0") > -1) {
-			bOnlyEdges = as.integer(bOnlyEdges)
-			if (point_order) bOnlyEdges = 2L # GEOS enum GEOS_VORONOI_PRESERVE_ORDER
-		} else {
-			if (point_order) 
+		if (point_order) {
+			if (compareVersion(CPL_geos_version(), "3.12.0") > -1)
+				bOnlyEdges = 2L # GEOS enum GEOS_VORONOI_PRESERVE_ORDER
+			else
 				warning("Point order retention not supported for GEOS ", CPL_geos_version())
 		}
 		st_sfc(CPL_geos_voronoi(x, st_sfc(envelope), dTolerance = dTolerance,
@@ -1182,19 +1212,28 @@ st_line_sample = function(x, n, density, type = "regular", sample = NULL) {
   		assign(".geos_error", st_point(pts), envir=.sf_cache)
 } #nocov end
 
-#' @param dist numeric, vector with distance value(s)
+#' @param dist numeric or units, vector with distance value(s), in units of the coordinates
 #' @name st_line_project_point
 #' @returns `st_line_interpolate` returns the point(s) at dist(s), when measured along (interpolated on) the line(s)
 #' @export
 #' @examples 
 #' st_line_interpolate(st_as_sfc("LINESTRING (0 0, 1 1)"), 1)
 #' st_line_interpolate(st_as_sfc("LINESTRING (0 0, 1 1)"), 1, TRUE)
+#' # https://github.com/r-spatial/sf/issues/2542; use for geographic coordinates:
+#' l1 <- st_as_sfc("LINESTRING (10.1 50.1, 10.2 50.2)", crs = 'OGC:CRS84')
+#' dists = units::set_units(seq(0, sqrt(2)/10, length.out = 5), degrees)
+#' st_line_interpolate(l1, dists)
 st_line_interpolate = function(line, dist, normalized = FALSE) {
 	stopifnot(inherits(line, "sfc"), all(st_dimension(line) == 1), 
 		is.logical(normalized), length(normalized) == 1,
 		is.numeric(dist))
-	if (isTRUE(st_is_longlat(line)))
+	if (isTRUE(st_is_longlat(line))) {
 		message_longlat("st_project_point")
+		if (inherits(dist, "units"))
+			dist = units::set_units(dist, "degree", mode = "standard")
+		else
+			stop("for interpolating geographic coordinates, dist should have units degree; see examples")
+	}
 	line = st_cast(line, "LINESTRING")
 	recycled = recycle_common(list(line, dist))
 	st_sfc(CPL_line_interpolate(recycled[[1]], recycled[[2]], normalized), 

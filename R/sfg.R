@@ -131,9 +131,11 @@ points_rcpp <- function(pts, gdim = "XY", ...) {
 #' st_geometrycollection() # empty geometry
 #' @export
 st_point = function(x = c(NA_real_, NA_real_), dim = "XYZ") {
-	stopifnot(is.numeric(x))
+	stopifnot(is.numeric(x) && length(x) >= 2)
 	if (is.matrix(x))
 		stopifnot(nrow(x) == 1) # because we want to be able to call rbind on points
+	if (any(is.na(x)))
+		x = rep(NA_real_, length(x))
 	structure(x, class = getClassDim(x, length(x), dim, "POINT"))
 }
 #' @name st
@@ -263,7 +265,7 @@ c.sfg = function(..., recursive = FALSE, flatten = TRUE) {
 		ucls = unique(cls)
 		if (length(ucls) == 1) {
 			switch(ucls,
-				POINT = st_multipoint(do.call(rbind, lst)),
+				POINT = st_multipoint(na.omit(do.call(rbind, lst))),
 				# CURVE = st_multicurve(Paste0(lst))
 				# CIRCULARSTRING = st_geometrycollection(lst), # FIXME??
 				LINESTRING = st_multilinestring(Paste0(lst)),

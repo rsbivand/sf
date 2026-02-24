@@ -1,3 +1,35 @@
+# version 1.0-24
+
+* `gdal_write()` handles drivers that only have a `CreateCopy()` option; https://github.com/r-spatial/stars/issues/762 
+
+* if `datum` is missing in a call to `st_graticule()`, a graticule by default will try to use the geographic coordinate reference system of arguments `x` or `crs`; when nothing is found there it falls back to `OGC:CRS84` (WGS84).
+
+* the figure margins parameter `mar` can be specified in a call to `plot.sf()`; #2558
+
+* fix class label setting in `[.sf()`; #2557
+
+# version 1.0-23
+
+* allow tests reading blosc compressed Zarr files to fail
+
+* `st_as_sf.data.frame()` sets `z_range` and `m_range` if needed; https://github.com/geoarrow/geoarrow-r/issues/75
+
+# version 1.0-22
+
+* `st_combine()` on `POINT` geometries ignores empty points; #2551
+
+* handle empty points better in `st_point()`, `st_as_sf.data.frame()` and `st_distance()`; https://github.com/r-spatial/s2/issues/289
+
+* for unprojected lines, `st_line_interpolate()` requires distance values with degree units; #2542
+
+* `unique.sfc()` added; #2546
+
+* for geodetic coordinates, `st_perimeter()` uses ellipsoidal computation if `sf_use_s2()` is `FALSE`; #2541
+
+* `st_as_sf.owin()` and `st_as_sfc.owin()` no longer ignore `crs` argument; #2532
+
+* clarify approximation errors in `st_buffer()` and how they differ for the GEOS or S2 backends, with examples by David Kaplan @dmkaplan2000; #2528
+
 # version 1.0-21
 
 * `st_crs(..., parameters = TRUE)` returns base geographic CRS as `gcs_crs`; #2524
@@ -5,6 +37,8 @@
 * loading `sf` no longer initializes the RNG state; see https://github.com/r-quantities/units/issues/409
 
 * fix `st_sample()` on geodetic coordinates; #2515
+
+* use `compareVersion()` consistently to compare GDAL versions; #2512
 
 # version 1.0-20
 
@@ -698,7 +732,7 @@
 
 * fix plotting of `sf` objects without attributes; #755
 
-* add reference to the [R Journal article](https://journal.r-project.org/archive/2018/RJ-2018-009/index.html) in CITATION
+* add reference to the [R Journal article](https://journal.r-project.org/articles/RJ-2018-009/index.html) in CITATION
 
 # version 0.6-3
 
