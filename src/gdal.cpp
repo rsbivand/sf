@@ -848,8 +848,8 @@ Rcpp::List CPL_compressors() {
 		);
 }
 #else
-Rcpp::CharacterVector CPL_compressors() {
+Rcpp::List CPL_compressors() {
 	Rcpp::stop("CPL_compressors() requires GDAL >= 3.4\n");
-	return Rcpp::NumericVector::create(0);
+	return Rcpp::List::create();
 }
 #endif
