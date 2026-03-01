@@ -611,7 +611,6 @@ plot.sfg = function(x, ...) {
 #' @param expandBB numeric; fractional values to expand the bounding box with,
 #' in each direction (bottom, left, top, right)
 #' @param graticule logical, or object of class \code{crs} (e.g., \code{st_crs('OGC:CRS84')} for a WGS84 graticule), or object created by \link{st_graticule}
-#' or object returned by \link{st_graticule}
 #' @param col_graticule color to used for the graticule (if present)
 #' @export
 #' @details \code{plot_sf} sets up the plotting area, axes, graticule, or webmap background; it
