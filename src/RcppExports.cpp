@@ -221,6 +221,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CPL_compressors
+Rcpp::List CPL_compressors();
+RcppExport SEXP _sf_CPL_compressors() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    rcpp_result_gen = Rcpp::wrap(CPL_compressors());
+    return rcpp_result_gen;
+END_RCPP
+}
 // CPL_area
 Rcpp::NumericVector CPL_area(Rcpp::List sfc);
 RcppExport SEXP _sf_CPL_area(SEXP sfcSEXP) {
@@ -1297,7 +1306,7 @@ RcppExport SEXP _sf_CPL_read_wkb(SEXP wkb_listSEXP, SEXP EWKBSEXP, SEXP spatiali
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1331,7 +1340,7 @@ RcppExport SEXP _sf_CPL_write_wkb(SEXP sfcSEXP, SEXP EWKBSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1398,6 +1407,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_sf_CPL_sfc_from_wkt", (DL_FUNC) &_sf_CPL_sfc_from_wkt, 1},
     {"_sf_CPL_gdal_with_geos", (DL_FUNC) &_sf_CPL_gdal_with_geos, 0},
     {"_sf_CPL_axis_order_authority_compliant", (DL_FUNC) &_sf_CPL_axis_order_authority_compliant, 1},
+    {"_sf_CPL_compressors", (DL_FUNC) &_sf_CPL_compressors, 0},
     {"_sf_CPL_area", (DL_FUNC) &_sf_CPL_area, 1},
     {"_sf_CPL_gdal_dimension", (DL_FUNC) &_sf_CPL_gdal_dimension, 2},
     {"_sf_CPL_length", (DL_FUNC) &_sf_CPL_length, 1},
