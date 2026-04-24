@@ -90,9 +90,9 @@ aggregate.sf = function(x, by, FUN, ..., do_union = TRUE, simplify = TRUE,
 	}
 }
 
-#' Areal-weighted interpolation of polygon data
+#' Area-weighted interpolation or dasymetric mapping of polygon data
 #'
-#' Areal-weighted interpolation of polygon data
+#' Area-weighted interpolation or dasymetric mapping of polygon data
 #' @name interpolate_aw
 #' @param x object of class \code{sf}, for which we want to aggregate attributes
 #' @param to object of class \code{sf} or \code{sfc}, with the target geometries
@@ -100,8 +100,12 @@ aggregate.sf = function(x, by, FUN, ..., do_union = TRUE, simplify = TRUE,
 #' @param na.rm logical; if `TRUE` remove features with `NA` attributes from `x` before interpolating
 #' @param ... ignored
 #' @param keep_NA logical; if \code{TRUE}, return all features in \code{to}, if \code{FALSE} return only those with non-NA values (but with \code{row.names} the index corresponding to the feature in \code{to})
-#' @details if `extensive` is `TRUE` and `na.rm` is set to `TRUE`, geometries with `NA` are effectively treated as having zero attribute values.
+#' @param include_non_intersected logical; for the case when `extensive=FALSE`, when set to `TRUE` divide by the target areas (including non-intersected areas), 
+#' when `FALSE` divide by the sum of the source areas.
+#' @param weights character; name of column in `to` that indicates (extensive) weights, to be used instead of areas, for redistributing attributes in `x`; currently only works for `extensive=TRUE`.
+#' @details if `extensive` is `TRUE` and `na.rm` is set to `TRUE`, geometries with `NA` are effectively treated as having zero attribute values. Dasymetric mapping is obtained when `weights` are specified.
 #' @examples
+#' # example Area-weighted interpolation:
 #' nc = st_read(system.file("shape/nc.shp", package="sf"))
 #' g = st_make_grid(nc, n = c(10, 5))
 #' a1 = st_interpolate_aw(nc["BIR74"], g, extensive = FALSE)
@@ -112,12 +116,38 @@ aggregate.sf = function(x, by, FUN, ..., do_union = TRUE, simplify = TRUE,
 #' a1$intensive = a1$BIR74
 #' a1$extensive = a2$BIR74
 #' \donttest{plot(a1[c("intensive", "extensive")], key.pos = 4)}
+#' 
+#' # example Dasymetric mapping:
+#' # load nr of addresses per 10 km grid cell, to proxy population -> birth density:
+#' grd.addr = system.file("gpkg/grd_addr.gpkg", package="sf") |> read_sf()
+#' xgrd.addr = grd.addr # copy for plotting
+#' xgrd.addr$ones[grd.addr$ones==0] = 1 # so that logz shows finite values
+#' \donttest{plot(xgrd.addr, logz=TRUE, main = "nr of addresses per cell") # log scale}
+#' nc = st_transform(nc, st_crs(grd.addr))
+#' # avoid "assumes attributes are constant or uniform over areas" warnings:
+#' st_agr(nc) = c(BIR74 = "constant", BIR79 = "constant")
+#' st_agr(grd.addr) = c(ones = "constant")
+#' # dasymetric mapping
+#' bir.grd = st_interpolate_aw(nc[c("BIR74","BIR79")], extensive = TRUE, grd.addr, weights = "ones")
+#' xbir.grd = bir.grd # copy for plotting
+#' xbir.grd$BIR74[xbir.grd$BIR74 == 0] = 1 # so that logz shows finite values
+#' \donttest{plot(xbir.grd["BIR74"], logz = TRUE, main = "redistributed birth counts, 1974-")}
+#' # verify sums:
+#' apply(as.data.frame(bir.grd)[1:2], 2, sum)
+#' apply(as.data.frame(nc)[c("BIR74", "BIR79")], 2, sum)
+#' # compare county-wise:
+#' st_agr(bir.grd) = c(BIR74 = "constant")
+#' aw = st_interpolate_aw(bir.grd["BIR74"], st_geometry(nc), extensive = TRUE)
+#' plot(nc$BIR74, aw$BIR74, log = 'xy', xlab = 'county-value', ylab = 'area-w interpolated')
+#' abline(0,1)
 #' @export
 st_interpolate_aw = function(x, to, extensive, ...) UseMethod("st_interpolate_aw")
 
 #' @export
 #' @name interpolate_aw
-st_interpolate_aw.sf = function(x, to, extensive, ..., keep_NA = FALSE, na.rm = FALSE) {
+st_interpolate_aw.sf = function(x, to, extensive, ..., keep_NA = FALSE, na.rm = FALSE,
+		include_non_intersected = FALSE, weights = character(0)) {
+
 	if (!inherits(to, "sf") && !inherits(to, "sfc")) {
 		to <- try(st_as_sf(to))
 		if (inherits(to, "try-error"))
@@ -125,6 +155,11 @@ st_interpolate_aw.sf = function(x, to, extensive, ..., keep_NA = FALSE, na.rm = 
 	}
 	if (isTRUE(na.rm))
 		x = x[! apply(is.na(x), 1, any),]
+
+	if (length(weights)) {
+		stopifnot(length(weights) == 1, is.character(weights), inherits(to, "sf"), weights %in% names(to))
+		return(dasymetric(x, to[weights], extensive, keep_NA, include_non_intersected))
+	}
 
 	if (! all_constant(x))
 		warning("st_interpolate_aw assumes attributes are constant or uniform over areas of x")
@@ -151,8 +186,11 @@ st_interpolate_aw.sf = function(x, to, extensive, ..., keep_NA = FALSE, na.rm = 
 			x_st$...area_s = unclass(st_area(x))[idx[,1]]
 			lapply(x_st, function(v) v * x_st$...area_st / x_st$...area_s)
 		} else {
-			# compute area_t:
-			target = sapply(split(area_i, idx[, 2]), sum) # and not st_area(to)?
+			# compute target area:
+			target = if (include_non_intersected)
+						setNames(as.numeric(st_area(to)), seq_len(NROW(to))) # use all of "to"
+					else
+						sapply(split(area_i, idx[, 2]), sum) # sum "to" parts intersecting "x"
 			df = data.frame(area = target, idx = as.integer(names(target)))
 			x_st$...area_t = merge(data.frame(idx = idx[,2]), df)$area
 			lapply(x_st, function(v) v * x_st$...area_st / x_st$...area_t)
@@ -166,5 +204,63 @@ st_interpolate_aw.sf = function(x, to, extensive, ..., keep_NA = FALSE, na.rm = 
 			st_sf(x_st, geometry = st_geometry(to)[x_st$Group.1], row.names = x_st$Group.1)
 	# clean up:
 	df$...area_t = df$...area_st = df$...area_s = df$Group.1 = NULL
+	st_set_agr(df, "aggregate")
+}
+
+dasymetric = function(x, to, extensive, keep_NA, include_non_intersected) {
+	stopifnot(isTRUE(extensive), !keep_NA, !include_non_intersected) # later...
+	stopifnot(length(to) == 2)
+	if (!inherits(to[[2]], "sfc"))
+		to = to[2:1] # swap: geom last
+	i = st_intersection(st_geometry(x), st_geometry(to), dimensions = "polygon")
+	idx = attr(i, "idx")
+	st_geometry(x) = NULL
+	stopifnot(!("...x_s" %in% names(x))) # avoid overwrite
+	x = x[idx[,1], , drop=FALSE] # x attributes corresponding to each area of i
+	i = st_set_geometry(x[idx[,1], , drop = FALSE], i) # add geometry
+
+	# https://stackoverflow.com/questions/57767022/how-do-you-use-st-interpolate-aw-with-polygon-layers-that-legitimately-include-p
+	# i[gc] = st_collection_extract(i[gc], "POLYGON") ## breaks if there are several POLYGONs in a GC
+	gc = which(st_is(i, "GEOMETRYCOLLECTION"))
+	if (length(gc)) {
+		g = st_geometry(i)
+		g[gc] = do.call(c, lapply(g[gc,], function(x) st_sfc(st_union(st_collection_extract(x, "POLYGON")))))
+		st_geometry(i) = g
+	}
+	two_d = which(st_dimension(i) == 2)
+	if (any(two_d)) {
+		g = st_geometry(i)
+		g[two_d] = st_cast(g[two_d], "MULTIPOLYGON")
+		st_geometry(i) = g
+	}
+
+	x$...x_st = st_interpolate_aw(to, i, extensive = extensive)[[1]] # distribute weights over the intersection geometries
+	# split according to source regions:
+	# first copy over idx[,2], as split() will rearrange records
+	x$...idx2 = idx[,2]
+	spl = split(x, idx[,1])
+	# reconstruct idx2:
+	idx2 = do.call(c, lapply(spl, function(x) x$...idx2))
+	# for each of the source regions, compute weighted sum
+	spl = lapply(spl, function(u) {
+			w = if ((s <- sum(u$...x_st)) == 0)
+					NA_real_
+				else
+					u$...x_st / s
+			u$...x_st = u$...idx2 = NULL # remove
+			as.data.frame(lapply(u, function(v) v * w))
+		})
+	x = do.call(rbind, spl)
+	# sum over the target regions:
+	# x = aggregate(x, list(idx[,2]), sum)
+	x = aggregate(x, list(idx2), sum)
+	df = if (keep_NA) {
+			ix = rep(NA_integer_, length(to))
+			ix[x$Group.1] = seq_along(x$Group.1)
+			st_sf(x[ix,], geometry = st_geometry(to))
+		} else
+			st_sf(x, geometry = st_geometry(to)[x$Group.1], row.names = x$Group.1)
+	# clean up:
+	df$Group.1 = NULL
 	st_set_agr(df, "aggregate")
 }

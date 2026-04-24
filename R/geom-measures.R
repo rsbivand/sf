@@ -62,6 +62,7 @@ st_area.sfg = function(x, ...) st_area(st_geometry(x), ...)
 #' @name geos_measures
 #' @export
 #' @return st_length returns the length of a \code{LINESTRING} or \code{MULTILINESTRING} geometry, using the coordinate reference system.  \code{POINT}, \code{MULTIPOINT}, \code{POLYGON} or \code{MULTIPOLYGON} geometries return zero.
+#' If coordinates are geodetic (i.e., long/lat), great circle calculations are carried out on a sphere (if `sf_use_s2()` is `TRUE`), or a geodesic line is computed on an ellipsoid (if `sf_use_s2()` is `FALSE`). For all other non-geodetic, projected coordinate systems, length calculations are planar, Euclidean distance calculations in the units of the coordinate system.
 #' @seealso \link{st_dimension}, \link{st_cast} to convert geometry types
 #'
 #' @examples
@@ -203,7 +204,7 @@ st_distance = function(x, y, ..., dist_fun, by_element = FALSE,
 					yc = st_coordinates(y)
 					sqrt((xc[,1] - yc[,1])^2 + (xc[,2] - yc[,2])^2)
 				} else
-					mapply(st_distance, x, y, by_element = FALSE, which = which, par = par)
+				  CPL_geos_dist_by_element(x, y, which, par)
 			} else {
 				if (missing_y && inherits(x, "sfc_POINT") && which == "Euclidean") {
 					m = as.matrix(stats::dist(cc <- st_coordinates(x)))

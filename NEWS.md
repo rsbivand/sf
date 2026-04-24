@@ -1,3 +1,21 @@
+# version 1.1-1
+
+* `st_graticule()` simplifies output lines; #1364
+
+* `dplyr::count()` and `dplyr::tally()` no longer preserve geometries; #2596
+
+* better handle graticules crossing the antemeridian; #2561
+
+* add the option `by_element = TRUE` to binary geometry predicates, measures and transformers; #2594 and #2595 by @rariariari w. help from Claude
+
+* add `MULTISURFACE` and `CURVEPOLYGON` to vctrs methods; #2589 #2601
+￼
+* add argument `include_non_intersected` to `st_interpolate_aw()`
+
+* add argument `weights`, for dasymetric mapping, to `st_interpolate_aw()` (experimental)
+
+* replace magrittr pipe `%>%` with base pipe `|>`, and hence require R >= 4.1.0
+
 # version 1.1-0
 
 * `gdal_compressors()` queries GDAL compressor and decompressor capabilities
