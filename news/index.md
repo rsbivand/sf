@@ -1,5 +1,40 @@
 # Changelog
 
+## version 1.1-1
+
+- [`st_graticule()`](https://r-spatial.github.io/sf/reference/st_graticule.md)
+  simplifies output lines;
+  [\#1364](https://github.com/r-spatial/sf/issues/1364)
+
+- [`dplyr::count()`](https://dplyr.tidyverse.org/reference/count.html)
+  and
+  [`dplyr::tally()`](https://dplyr.tidyverse.org/reference/count.html)
+  no longer preserve geometries;
+  [\#2596](https://github.com/r-spatial/sf/issues/2596)
+
+- better handle graticules crossing the antemeridian;
+  [\#2561](https://github.com/r-spatial/sf/issues/2561)
+
+- add the option `by_element = TRUE` to binary geometry predicates,
+  measures and transformers;
+  [\#2594](https://github.com/r-spatial/sf/issues/2594) and
+  [\#2595](https://github.com/r-spatial/sf/issues/2595) by
+  [@rariariari](https://github.com/rariariari) w. help from Claude
+
+- add `MULTISURFACE` and `CURVEPOLYGON` to vctrs methods;
+  [\#2589](https://github.com/r-spatial/sf/issues/2589)
+  [\#2601](https://github.com/r-spatial/sf/issues/2601) ￼
+
+- add argument `include_non_intersected` to
+  [`st_interpolate_aw()`](https://r-spatial.github.io/sf/reference/interpolate_aw.md)
+
+- add argument `weights`, for dasymetric mapping, to
+  [`st_interpolate_aw()`](https://r-spatial.github.io/sf/reference/interpolate_aw.md)
+  (experimental)
+
+- replace magrittr pipe `%>%` with base pipe `|>`, and hence require R
+  \>= 4.1.0
+
 ## version 1.1-0
 
 CRAN release: 2026-02-24

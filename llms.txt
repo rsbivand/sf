@@ -386,7 +386,7 @@ This project gratefully acknowledges financial
   : Geometric unary operations on simple feature geometry sets
 
 - [`st_interpolate_aw()`](https://r-spatial.github.io/sf/reference/interpolate_aw.md)
-  : Areal-weighted interpolation of polygon data
+  : Area-weighted interpolation or dasymetric mapping of polygon data
 
 - [`is_driver_available()`](https://r-spatial.github.io/sf/reference/is_driver_available.md)
   : Check if driver is available
@@ -659,6 +659,8 @@ This project gratefully acknowledges financial
   [`rename_with.sf()`](https://r-spatial.github.io/sf/reference/tidyverse.md)
   [`slice.sf()`](https://r-spatial.github.io/sf/reference/tidyverse.md)
   [`summarise.sf()`](https://r-spatial.github.io/sf/reference/tidyverse.md)
+  [`count.sf()`](https://r-spatial.github.io/sf/reference/tidyverse.md)
+  [`tally.sf()`](https://r-spatial.github.io/sf/reference/tidyverse.md)
   [`distinct.sf()`](https://r-spatial.github.io/sf/reference/tidyverse.md)
   [`gather.sf()`](https://r-spatial.github.io/sf/reference/tidyverse.md)
   [`pivot_longer.sf()`](https://r-spatial.github.io/sf/reference/tidyverse.md)
