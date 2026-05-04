@@ -32,10 +32,6 @@ slice.sf(.data, ..., .dots)
 
 summarise.sf(.data, ..., .dots, do_union = TRUE, is_coverage = FALSE)
 
-count.sf(x, ..., wt = NULL, sort = FALSE, name = "n")
-
-tally.sf(x, ..., wt = NULL, sort = FALSE, name = "n")
-
 distinct.sf(.data, ..., .keep_all = FALSE, exact = FALSE, par = 0)
 
 gather.sf(
@@ -186,18 +182,6 @@ anti_join.sf(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ...)
 
   logical; if `do_union` is `TRUE`, use an optimized algorithm for
   features that form a polygonal coverage (have no overlaps)
-
-- wt:
-
-  see original function docs
-
-- sort:
-
-  see original function docs
-
-- name:
-
-  see original function docs
 
 - .keep_all:
 
@@ -402,9 +386,6 @@ geometries using
 sharing a boundary are combined, this leads to geometries that are
 invalid; see for instance <https://github.com/r-spatial/sf/issues/681>.
 
-The functions `count` and `tally` drop all geometries. For counting
-geometries use `summarise(.data, n = n(), .by = "geometry")`.
-
 `distinct` gives distinct records for which all attributes and
 geometries are distinct;
 [st_equals](https://r-spatial.github.io/sf/reference/geos_binary_pred.md)
@@ -518,31 +499,19 @@ if (require(dplyr, quietly = TRUE)) {
 #> 15 (((-78.49252 36.17359, -78.51472 36.17522, -78.51709 36.46148, -78.502…     2
 #> 16 (((-77.33221 36.06798, -77.40531 35.99472, -77.42574 35.99606, -77.438…     2
 if (require(dplyr, quietly = TRUE)) {
-  nc$area_cl <- cut(nc$AREA, c(0, .1, .12, .15, .25))
-  nc |> count(area_cl)
-  nc |> group_by(area_cl) |> tally()
-}
-#> # A tibble: 4 × 2
-#>   area_cl         n
-#>   <fct>       <int>
-#> 1 (0,0.1]        35
-#> 2 (0.1,0.12]     15
-#> 3 (0.12,0.15]    22
-#> 4 (0.15,0.25]    28
-if (require(dplyr, quietly = TRUE)) {
  nc[c(1:100, 1:10), ] |> distinct() |> nrow()
 }
 #> [1] 100
 if (require(tidyr, quietly = TRUE) && require(dplyr, quietly = TRUE) && "geometry" %in% names(nc)) {
  nc |> select(SID74, SID79) |> gather("VAR", "SID", -geometry) |> summary()
 }
-#>           geometry       VAR                 SID        
-#>  MULTIPOLYGON :200   Length:200         Min.   : 0.000  
-#>  epsg:4267    :  0   Class :character   1st Qu.: 2.000  
-#>  +proj=long...:  0   Mode  :character   Median : 5.000  
-#>                                         Mean   : 7.515  
-#>                                         3rd Qu.: 9.000  
-#>                                         Max.   :57.000  
+#>           geometry          VAR           SID        
+#>  MULTIPOLYGON :200   Length   :200   Min.   : 0.000  
+#>  epsg:4267    :  0   N.unique :  2   1st Qu.: 2.000  
+#>  +proj=long...:  0   N.blank  :  0   Median : 5.000  
+#>                      Min.nchar:  5   Mean   : 7.515  
+#>                      Max.nchar:  5   3rd Qu.: 9.000  
+#>                                      Max.   :57.000  
 if (require(tidyr, quietly = TRUE) && require(dplyr, quietly = TRUE) && "geometry" %in% names(nc)) {
  nc$row = 1:100 # needed for spread to work
  nc |> select(SID74, SID79, geometry, row) |>
