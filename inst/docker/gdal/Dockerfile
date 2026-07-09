@@ -59,7 +59,8 @@ RUN apt-get update && apt-get install -y --fix-missing \
 	libopenjp2-7-dev \
 	libharfbuzz-dev \
 	libharfbuzz-dev \
-	libfribidi-dev
+	libfribidi-dev \
+	libuv1-dev
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -84,7 +85,7 @@ RUN wget -q http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 \
   && ldconfig
 
 # PROJ
-ENV PROJ_VERSION 9.7.1
+ENV PROJ_VERSION 9.8.1
 RUN wget -q http://download.osgeo.org/proj/proj-${PROJ_VERSION}.tar.gz
 RUN tar zxvf proj-${PROJ_VERSION}.tar.gz
 RUN cd proj* \
@@ -98,8 +99,8 @@ RUN cd proj* \
   && ldconfig
 
 # GDAL:
-ENV GDAL_VERSION 3.12.2
-ENV GDAL_VERSION_NAME 3.12.2
+ENV GDAL_VERSION 3.13.1
+ENV GDAL_VERSION_NAME 3.13.1rc1
 RUN wget -q http://download.osgeo.org/gdal/${GDAL_VERSION}/gdal-${GDAL_VERSION_NAME}.tar.gz \
   && tar -xf gdal-${GDAL_VERSION_NAME}.tar.gz \
   && cd gdal* \
@@ -110,25 +111,25 @@ RUN wget -q http://download.osgeo.org/gdal/${GDAL_VERSION}/gdal-${GDAL_VERSION_N
   && make install \
   && ldconfig
 
-RUN Rscript -e 'install.packages(c("sp", "RPostgreSQL", "RSQLite", "testthat", "knitr", "tidyr", "geosphere", "maps", "microbenchmark", "raster", "dplyr", "tibble", "units", "DBI",  "covr", "protolite", "tmap", "mapview", "odbc", "pool", "rmarkdown", "RPostgres","spatstat", "stars", "XML", "tmaptools", "tmap", "terra", "PCICt", "RNetCDF", "future.apply", "ggforce", "ggthemes", "gstat", "ncmeta", "pbapply", "plm", "spacetime", "xts", "zoo", "tidync", "ncdfgeom", "cubelyr", "clue", "classInt", "mapdata", "ncdfgeom", "exactextractr", "randomForest", "nanoarrow", "tmap", "spatstat", "spatstat.linnet", "viridis", "CFtime", "tinytest", "lwgeom", "stars"))'
+RUN Rscript -e 'install.packages(c("sp", "RPostgreSQL", "RSQLite", "testthat", "knitr", "tidyr", "geosphere", "maps", "microbenchmark", "raster", "dplyr", "tibble", "units", "DBI",  "covr", "protolite", "tmap", "mapview", "odbc", "pool", "rmarkdown", "RPostgres","spatstat", "stars", "XML", "tmaptools", "tmap", "terra", "RNetCDF", "future.apply", "ggforce", "ggthemes", "gstat", "ncmeta", "pbapply", "plm", "spacetime", "xts", "zoo", "tidync", "ncdfgeom", "cubelyr", "clue", "classInt", "mapdata", "ncdfgeom", "exactextractr", "randomForest", "nanoarrow", "tmap", "spatstat", "spatstat.linnet", "viridis", "CFtime", "tinytest", "lwgeom", "stars", "testthat"))'
 
 # sf:
 RUN git clone --depth 10 https://github.com/r-spatial/sf.git
-RUN R CMD build --no-build-vignettes --no-manual sf
-RUN R CMD INSTALL sf_*.tar.gz
+RUN R CMD build --no-manual sf
+# RUN R CMD INSTALL sf_*.tar.gz
 RUN R CMD check --no-build-vignettes --no-manual --as-cran sf_*.tar.gz 
 
 # lwgeom:
-RUN git clone --depth 10 https://github.com/r-spatial/lwgeom.git
-RUN R CMD build --no-build-vignettes --no-manual lwgeom
-RUN R CMD INSTALL lwgeom_*.tar.gz
-RUN R CMD check --no-build-vignettes --no-manual --as-cran lwgeom_*.tar.gz 
+#RUN git clone --depth 10 https://github.com/r-spatial/lwgeom.git
+#RUN R CMD build --no-build-vignettes --no-manual lwgeom
+#RUN R CMD INSTALL lwgeom_*.tar.gz
+#RUN R CMD check --no-build-vignettes --no-manual --as-cran lwgeom_*.tar.gz 
 
 # stars:
 RUN git clone --depth 10 https://github.com/r-spatial/stars.git
 RUN R CMD build --no-manual stars
-RUN R CMD INSTALL stars_*.tar.gz
-RUN Rscript -e 'options(timeout=1200); install.packages("starsdata", repos="http://cran.uni-muenster.de/pebesma/")'
+#RUN R CMD INSTALL stars_*.tar.gz
+RUN Rscript -e 'options(timeout=1200); install.packages("starsdata", repos="https://cran.uni-muenster.de/pebesma/")'
 RUN _R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-build-vignettes --no-manual --as-cran stars_*.tar.gz 
 
 #

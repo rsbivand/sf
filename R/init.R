@@ -7,13 +7,8 @@
 #' @importFrom grDevices dev.size rgb cm
 #' @importFrom DBI dbConnect dbDisconnect dbExecute dbGetQuery dbReadTable dbSendQuery dbWriteTable
 #' @importFrom units as_units drop_units make_unit_label set_units
-#' @importFrom classInt classIntervals
 #' @useDynLib sf, .registration=TRUE
 NULL
-
-#' @importFrom magrittr %>%
-#' @export
-magrittr::`%>%`
 
 setOldClass("sf")
 setOldClass(c("sfc_POINT", "sfc"))

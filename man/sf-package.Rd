@@ -31,6 +31,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Edzer Pebesma \email{edzer.pebesma@uni-muenster.de} (\href{https://orcid.org/0000-0001-8049-7069}{ORCID})
 
+Authors:
+\itemize{
+  \item Edzer Pebesma \email{edzer.pebesma@uni-muenster.de} (\href{https://orcid.org/0000-0001-8049-7069}{ORCID})
+}
+
 Other contributors:
 \itemize{
   \item Roger Bivand (\href{https://orcid.org/0000-0003-2392-6140}{ORCID}) [contributor]
@@ -45,6 +50,7 @@ Other contributors:
   \item Thomas Lin Pedersen [contributor]
   \item Dan Baston [contributor]
   \item Dewey Dunnington (\href{https://orcid.org/0000-0002-9415-4582}{ORCID}) [contributor]
+  \item Alexandre Courtiol (\href{https://orcid.org/0000-0003-0637-2959}{ORCID}) [contributor]
 }
 
 }
