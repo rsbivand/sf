@@ -1,6 +1,12 @@
 # Changelog
 
+## version 1.1-2
+
+- move dependency `classInt` to Suggests:
+
 ## version 1.1-1
+
+CRAN release: 2026-05-06
 
 - use RAII in functions calling GEOS for handling context, based on how
   terra does this; [\#2604](https://github.com/r-spatial/sf/issues/2604)
@@ -10,9 +16,7 @@
   [\#1364](https://github.com/r-spatial/sf/issues/1364)
 
 - [`dplyr::count()`](https://dplyr.tidyverse.org/reference/count.html)
-  and
-  [`dplyr::tally()`](https://dplyr.tidyverse.org/reference/count.html)
-  no longer preserve geometries;
+  drops geometries if `.drop_geom = TRUE` is set;
   [\#2596](https://github.com/r-spatial/sf/issues/2596)
 
 - better handle graticules crossing the antemeridian;
