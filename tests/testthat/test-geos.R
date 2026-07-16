@@ -182,6 +182,10 @@ test_that("st_difference works with partially overlapping geometries", {
 		st_polygon(list(matrix(c(0, 2, 1, 0, 0, 0, 1, 0), ncol = 2))),
 		st_polygon(list(matrix(c(0, 1, 2, 1.5, 1, 0.5, 0, 0.5, 1.5, 0.5, 0.5, 1, 0.5, 0.5), ncol = 2))),
 		st_polygon(list(matrix(c(0, 1, 2, 1.25, 1, 0.75, 0, 1.25, 2.5, 1.25, 1.25, 1.5, 1.25, 1.25), ncol = 2)))))
+                if (package_version(gsub("[a-zA-Z]", "", sf_extSoftVersion()[["GEOS"]])) >= "3.15.0") {
+			correct_geom[[2]][[1]] = correct_geom[[2]][[1]][c(6, 1:6),]
+			correct_geom[[3]][[1]] = correct_geom[[3]][[1]][c(6, 1:6),]
+		}
 	}
 	# erase overlaps
 	out1 = st_difference(in1)
