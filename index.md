@@ -151,13 +151,6 @@ library(remotes)
 install_github("r-spatial/sf", configure.args = "--with-proj-lib=$(brew --prefix)/lib/")
 ```
 
-Alternatively, [these
-instructions](https://stat.ethz.ch/pipermail/r-sig-mac/2017-June/012429.html)
-explain how to install gdal using kyngchaos frameworks.
-
-For Mac OS 11 Big Sur source install instruction, see
-[here](https://github.com/r-spatial/sf/issues/1536#issuecomment-727342736)
-
 ### Linux
 
 For Unix-alikes, GDAL (\>= 2.0.1), GEOS (\>= 3.4.0) and PROJ (\>= 4.8.0)
