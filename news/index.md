@@ -2,6 +2,13 @@
 
 ## version 1.1-3
 
+CRAN release: 2026-09-11
+
+- move
+  [`st_interpolate_aw.stars()`](https://r-spatial.github.io/sf/reference/interpolate_aw.md)
+  from `stars` to `sf`, to get ready for using
+  `GEOS::GEOSGridIntersectionFractions()` in the future
+
 - guess Parquet driver from `.parquet` file extension;
   [\#2506](https://github.com/r-spatial/sf/issues/2506)
 
@@ -10,6 +17,10 @@
 - new argument `round` to `st_coordinates` to round output coordinates
   to a given precision level;
   [\#2620](https://github.com/r-spatial/sf/issues/2620)
+
+- [`st_combine()`](https://r-spatial.github.io/sf/reference/geos_combine.md)
+  preserves the precision of input object;
+  [\#2618](https://github.com/r-spatial/sf/issues/2618)
 
 ## version 1.1-2
 
