@@ -1,5 +1,16 @@
 # Changelog
 
+## version 1.1-4
+
+- [`st_combine()`](https://r-spatial.github.io/sf/reference/geos_combine.md)
+  preserves the precision of input object;
+  [\#2618](https://github.com/r-spatial/sf/issues/2618)
+
+- fix
+  [`st_write()`](https://r-spatial.github.io/sf/reference/st_write.md)
+  for writing binary blobs;
+  [\#2629](https://github.com/r-spatial/sf/issues/2629)
+
 ## version 1.1-3
 
 CRAN release: 2026-09-11
@@ -12,15 +23,15 @@ CRAN release: 2026-09-11
 - guess Parquet driver from `.parquet` file extension;
   [\#2506](https://github.com/r-spatial/sf/issues/2506)
 
+- restore the graphics state after a failed
+  [`plot.sf()`](https://r-spatial.github.io/sf/reference/plot.md) key;
+  [\#2611](https://github.com/r-spatial/sf/issues/2611)
+
 - adapt tests to changes in GEOS \>= 3.15.0
 
 - new argument `round` to `st_coordinates` to round output coordinates
   to a given precision level;
   [\#2620](https://github.com/r-spatial/sf/issues/2620)
-
-- [`st_combine()`](https://r-spatial.github.io/sf/reference/geos_combine.md)
-  preserves the precision of input object;
-  [\#2618](https://github.com/r-spatial/sf/issues/2618)
 
 ## version 1.1-2
 
