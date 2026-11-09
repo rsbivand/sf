@@ -104,11 +104,11 @@ The remaining ten geometries are rare but are increasingly found:
 | `TIN` | A TIN (triangulated irregular network) is a PolyhedralSurface consisting only of Triangle patches. |
 | `TRIANGLE` | A Triangle is a polygon with 3 distinct, non-collinear vertices and no interior boundary |
 
-Note that `CIRCULASTRING`, `COMPOUNDCURVE` and `CURVEPOLYGON` are not
+Note that `CIRCULARSTRING`, `COMPOUNDCURVE` and `CURVEPOLYGON` are not
 described in the SFA standard, but in the [SQL-MM part 3
 standard](https://www.iso.org/standard/38651.html). The descriptions
 above were copied from the [PostGIS
-manual](http://postgis.net/docs/using_postgis_dbmanagement.md).
+manual](https://postgis.net/docs/using_postgis_dbmanagement.html).
 
 ### Coordinate reference system
 
@@ -123,7 +123,7 @@ unit](https://CRAN.R-project.org/package=units).
 ## How simple features in R are organized
 
 Package `sf` represents simple features as native R objects. Similar to
-[PostGIS](http://postgis.net/), all functions and methods in `sf` that
+[PostGIS](https://postgis.net/), all functions and methods in `sf` that
 operate on spatial data are prefixed by `st_`, which refers to *spatial
 type*; this makes them easily findable by command-line completion.
 Simple features are implemented as R native data, using simple data
@@ -232,35 +232,35 @@ methods(class = "sf")
 ## [21] st_agr                       st_agr<-                    
 ## [23] st_area                      st_as_s2                    
 ## [25] st_as_sf                     st_as_sfc                   
-## [27] st_bbox                      st_boundary                 
-## [29] st_break_antimeridian        st_buffer                   
-## [31] st_cast                      st_centroid                 
-## [33] st_collection_extract        st_concave_hull             
-## [35] st_convex_hull               st_coordinates              
-## [37] st_crop                      st_crs                      
-## [39] st_crs<-                     st_difference               
-## [41] st_drop_geometry             st_exterior_ring            
-## [43] st_filter                    st_geometry                 
-## [45] st_geometry<-                st_inscribed_circle         
-## [47] st_interpolate_aw            st_intersection             
-## [49] st_intersects                st_is_full                  
-## [51] st_is_valid                  st_is                       
-## [53] st_join                      st_line_merge               
-## [55] st_m_range                   st_make_valid               
-## [57] st_minimum_bounding_circle   st_minimum_rotated_rectangle
-## [59] st_nearest_points            st_node                     
-## [61] st_normalize                 st_point_on_surface         
-## [63] st_polygonize                st_precision                
-## [65] st_reverse                   st_sample                   
-## [67] st_segmentize                st_set_precision            
-## [69] st_shift_longitude           st_simplify                 
-## [71] st_snap                      st_sym_difference           
-## [73] st_transform                 st_triangulate_constrained  
-## [75] st_triangulate               st_union                    
-## [77] st_voronoi                   st_wrap_dateline            
-## [79] st_write                     st_z_range                  
-## [81] st_zm                        text                        
-## [83] transform                   
+## [27] st_as_text                   st_bbox                     
+## [29] st_boundary                  st_break_antimeridian       
+## [31] st_buffer                    st_cast                     
+## [33] st_centroid                  st_collection_extract       
+## [35] st_concave_hull              st_convex_hull              
+## [37] st_coordinates               st_crop                     
+## [39] st_crs                       st_crs<-                    
+## [41] st_difference                st_drop_geometry            
+## [43] st_exterior_ring             st_filter                   
+## [45] st_geometry                  st_geometry<-               
+## [47] st_inscribed_circle          st_interpolate_aw           
+## [49] st_intersection              st_intersects               
+## [51] st_is_full                   st_is_valid                 
+## [53] st_is                        st_join                     
+## [55] st_line_merge                st_m_range                  
+## [57] st_make_valid                st_minimum_bounding_circle  
+## [59] st_minimum_rotated_rectangle st_nearest_points           
+## [61] st_node                      st_normalize                
+## [63] st_point_on_surface          st_polygonize               
+## [65] st_precision                 st_reverse                  
+## [67] st_sample                    st_segmentize               
+## [69] st_set_precision             st_shift_longitude          
+## [71] st_simplify                  st_snap                     
+## [73] st_sym_difference            st_transform                
+## [75] st_triangulate_constrained   st_triangulate              
+## [77] st_union                     st_voronoi                  
+## [79] st_wrap_dateline             st_write                    
+## [81] st_z_range                   st_zm                       
+## [83] text                         transform                   
 ## see '?methods' for accessing help and source code
 ```
 
@@ -1228,4 +1228,4 @@ Further reading:
 2.  Stasch, C., S. Scheider, E. Pebesma, W. Kuhn, 2014. Meaningful
     Spatial Prediction and Aggregation. Environmental Modelling &
     Software, 51, (149–165, [open
-    access](http://dx.doi.org/10.1016/j.envsoft.2013.09.006)).
+    access](https://dx.doi.org/10.1016/j.envsoft.2013.09.006)).

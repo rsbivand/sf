@@ -169,7 +169,10 @@ projection](https://en.wikipedia.org/wiki/Equirectangular_projection)
 (also called *equidistant circular*), where at the center of the plot
 (or of the bounding box) one unit north equals one unit east.
 
-Proj.4 also lets you project data to this projection, and the plot of
+[`sf::st_transform()`](https://r-spatial.github.io/sf/reference/st_transform.md)
+also lets you project data to this projection using
+[proj-strings](https://proj.org/en/stable/usage/quickstart.html), and
+the plot of
 
 ``` r
 
@@ -272,10 +275,10 @@ methods(st_as_grob)
     ## [19] st_as_grob.sfc_POLYGON*        
     ## see '?methods' for accessing help and source code
 
-which convert simple simple feature objects into `grob` (“graphics
-objects”) objects; `grob`s are the graphic primitives of the `grid`
-plotting package. These methods can be used by plotting packages that
-build on `grid`, such as `ggplot2` (which uses them in
+which convert simple feature objects into `grob` (“graphics objects”)
+objects; `grob`s are the graphic primitives of the `grid` plotting
+package. These methods can be used by plotting packages that build on
+`grid`, such as `ggplot2` (which uses them in
 [`geom_sf()`](https://ggplot2.tidyverse.org/reference/ggsf.html)) and
 `tmap`. In addition,
 [`st_viewport()`](https://r-spatial.github.io/sf/reference/st_viewport.md)
@@ -285,11 +288,9 @@ aspect ratio similar to that of
 
 ### ggplot2
 
-contains a geom specially for simple feature objects, with support for
-graticule white lines in the background using
+Package `ggplot2` contains a geom specially for simple feature objects,
+with support for graticule white lines in the background using
 [`sf::st_graticule()`](https://r-spatial.github.io/sf/reference/st_graticule.md).
-Support is currently good for polygons; for lines or points, your
-mileage may vary.
 
 ``` r
 
@@ -316,21 +317,6 @@ and sets of maps can be plotted as facet plots after rearranging the
 ``` r
 
 library(dplyr)
-```
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
-
 library(tidyr)
 nc2 <- nc |> select(SID74, SID79, geom) |> gather(VAR, SID, -geom)
 ggplot() + 
@@ -388,6 +374,6 @@ ttm()
 tmap_last()
 ```
 
-A draft version of the book *Elegant and informative maps with tmap* by
-Martijn Tennekes and Jakub Nowosad is found at
-<https://r-tmap.github.io/>
+A draft version of the book *Spatial Data Visualization with tmap: A
+Practical Guide to Thematic Mapping in R* by Martijn Tennekes and Jakub
+Nowosad is found at <https://r-tmap.github.io/>
